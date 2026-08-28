@@ -7,12 +7,14 @@ import android.graphics.Color;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebChromeClient;
+import android.webkit.CookieManager;
 
 import org.CredoresProgram.WebViewCREA.WebViewCreaClient;
 import org.CreadoresProgram.RetroCreaBrowser.browserconfig.SetConfigOkClient;
 
 public class MainActivity extends Activity{
     private WebView webView;
+    private WebViewCREA creaClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -20,7 +22,7 @@ public class MainActivity extends Activity{
         setContentView(R.layout.layout_main);
         this.webView = (WebView) findViewById(R.id.webview);
         webView.setWebChromeClient(new WebChromeClient());
-        WebViewCreaClient creaClient = new WebViewCreaClient();
+        this.creaClient = new WebViewCreaClient();
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD){
             SetConfigOkClient.configOkClient(creaClient.getNetClient());
         }
@@ -65,6 +67,7 @@ public class MainActivity extends Activity{
         webSettings.setLoadWithOverviewMode(true);
         webSettings.setSaveFormData(true);
         webView.setBackgroundColor(Color.BLACK);
+        creaClient.loadUrl(webView, "https://google.com/");
     }
 
     @Override

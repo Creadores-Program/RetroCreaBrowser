@@ -1,0 +1,52 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'org.CreadoresProgram.RetroCreaBrowser'
+    compileSdk 25
+
+    defaultConfig {
+        applicationId 'org.CreadoresProgram.RetroCreaBrowser'
+        targetSdk 25
+        versionCode 1
+        versionName '1.0.0-beta'
+    }
+    flavorDimensions "sdkVersion"
+    productFlavors {
+        standard {
+            dimension "sdkVersion"
+            minSdkVersion 9
+        }
+        legacy21 {
+            dimension "sdkVersion"
+            minSdkVersion 7
+        }
+    }
+    signingConfigs {
+        debug {
+            storeFile file('RetroCreaBrowser.keystore')
+            storePassword System.getenv("RETROCREABROWSERKEYCONTREAPP")
+            keyAlias "RetroCreaBrowserkey"
+            keyPassword System.getenv("RETROCREABROWSERKEYCONTREAPP")
+        }
+    }
+
+    buildTypes {
+        debug {
+            signingConfig signingConfigs.debug
+        }
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    standardImplementation 'org.conscrypt:conscrypt-android:2.5.3'
+    standardImplementation 'com.squareup.okhttp3:okhttp:3.12.13'
+    standardImplementation files('libs/WebViewCREA-standard-release.aar')
+
+    legacy21Implementation files('libs/WebViewCREA-legacy20-release.aar')
+}
