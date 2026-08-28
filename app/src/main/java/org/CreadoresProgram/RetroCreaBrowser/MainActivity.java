@@ -8,6 +8,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebChromeClient;
 import android.webkit.CookieManager;
+import android.widget.TextView;
 
 import org.CredoresProgram.WebViewCREA.WebViewCreaClient;
 import org.CreadoresProgram.RetroCreaBrowser.browserconfig.SetConfigOkClient;
@@ -15,13 +16,21 @@ import org.CreadoresProgram.RetroCreaBrowser.browserconfig.SetConfigOkClient;
 public class MainActivity extends Activity{
     private WebView webView;
     private WebViewCREA creaClient;
+    private TextView actionBarTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_main);
         this.webView = (WebView) findViewById(R.id.webview);
-        webView.setWebChromeClient(new WebChromeClient());
+        this.actionBarTitle = (TextView) findViewById(R.id.top_bar_title);
+        webView.setWebChromeClient(new WebChromeClient(){
+            @Override
+            public void onReceivedTitle(WebView view, String title) {
+                super.onReceivedTitle(view, title);
+                updateTitle(title);
+            }
+        });
         this.creaClient = new WebViewCreaClient();
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD){
             SetConfigOkClient.configOkClient(creaClient.getNetClient());
@@ -68,6 +77,23 @@ public class MainActivity extends Activity{
         webSettings.setSaveFormData(true);
         webView.setBackgroundColor(Color.BLACK);
         creaClient.loadUrl(webView, "https://google.com/");
+    }
+
+    private void updateTitle(String title){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            updateActionBar(title);
+        } else {
+            if (actionBarTitle != null) {
+                actionBarTitle.setText(title);
+            }
+        }
+    }
+
+    private void updateActionBar(String title) {
+        android.app.ActionBar actionBar = getActionBar();
+        if (actionBar != null) {
+            actionBar.setTitle(title);
+        }
     }
 
     @Override
