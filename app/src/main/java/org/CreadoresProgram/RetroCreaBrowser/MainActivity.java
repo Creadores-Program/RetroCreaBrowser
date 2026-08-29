@@ -68,7 +68,7 @@ public class MainActivity extends Activity{
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             webSettings.setDisabledActionModeMenuItems(WebSettings.MENU_ITEM_NONE);
         }
-        //webSettings.setUserAgentString(creaClient.getUserAgent(webView, WebViewCreaClient.UserAgentsIds.WEBVIEW_MOBILE));
+        webSettings.setUserAgentString(creaClient.getUserAgent(webView, WebViewCreaClient.UserAgentsIds.WEBVIEW_MOBILE));
         webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
         webSettings.setBuiltInZoomControls(false);
         webSettings.setDisplayZoomControls(false);
