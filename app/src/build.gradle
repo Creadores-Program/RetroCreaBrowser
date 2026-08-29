@@ -23,19 +23,19 @@ android {
             minSdkVersion 7
         }
     }
-    signingConfigs {
+    /*signingConfigs {
         debug {
             storeFile file('RetroCreaBrowser.keystore')
             storePassword System.getenv("RETROCREABROWSERKEYCONTREAPP")
             keyAlias "RetroCreaBrowserkey"
             keyPassword System.getenv("RETROCREABROWSERKEYCONTREAPP")
         }
-    }
+    }*/
 
     buildTypes {
-        debug {
+        /*debug {
             signingConfig signingConfigs.debug
-        }
+        }*/
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
