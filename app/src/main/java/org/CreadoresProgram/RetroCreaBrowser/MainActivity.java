@@ -68,9 +68,7 @@ public class MainActivity extends Activity{
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             webSettings.setDisabledActionModeMenuItems(WebSettings.MENU_ITEM_NONE);
         }
-        /*try{
-          webSettings.setUserAgentString(creaClient.getUserAgent(webView, WebViewCreaClient.UserAgentsIds.WEBVIEW_MOBILE));
-        }catch(Exception e){}*/
+        webSettings.setUserAgentString(creaClient.getUserAgent(webView, WebViewCreaClient.UserAgentsIds.WEBVIEW_MOBILE));
         webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
         webSettings.setBuiltInZoomControls(false);
         webSettings.setDisplayZoomControls(false);
@@ -79,7 +77,7 @@ public class MainActivity extends Activity{
         webSettings.setLoadWithOverviewMode(true);
         webSettings.setSaveFormData(true);
         webView.setBackgroundColor(Color.BLACK);
-        //creaClient.loadUrl(webView, "https://google.com/");
+        creaClient.loadUrl(webView, "https://google.com/");
     }
 
     private void updateTitle(String title){
