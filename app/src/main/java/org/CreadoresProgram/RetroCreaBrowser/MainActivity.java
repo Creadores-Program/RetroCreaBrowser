@@ -59,19 +59,18 @@ public class MainActivity extends Activity{
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             webSettings.setMediaPlaybackRequiresUserGesture(false);
         }
-        /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             webSettings.setMixedContentMode(WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE);
             CookieManager.getInstance().setAcceptThirdPartyCookies(webView, true);
         } else {
             CookieManager.getInstance().setAcceptCookie(true);
-        }*/
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            //webSettings.setDisabledActionModeMenuItems(WebSettings.MENU_ITEM_NONE);
         }
-        finish();
-        try{
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            webSettings.setDisabledActionModeMenuItems(WebSettings.MENU_ITEM_NONE);
+        }
+        /*try{
           webSettings.setUserAgentString(creaClient.getUserAgent(webView, WebViewCreaClient.UserAgentsIds.WEBVIEW_MOBILE));
-        }catch(Exception e){}
+        }catch(Exception e){}*/
         webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
         webSettings.setBuiltInZoomControls(false);
         webSettings.setDisplayZoomControls(false);
