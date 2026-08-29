@@ -11,7 +11,7 @@ import android.webkit.WebChromeClient;
 import android.webkit.CookieManager;
 import android.widget.TextView;
 
-import org.CredoresProgram.WebViewCREA.WebViewCreaClient;
+import org.CreadoresProgram.WebViewCREA.WebViewCreaClient;
 import org.CreadoresProgram.RetroCreaBrowser.browserconfig.SetConfigOkClient;
 
 public class MainActivity extends Activity{
