@@ -4,6 +4,14 @@
     android:layout_height="48dp"
     android:background="#000000">
 
+    <ImageView
+        android:id="@+id/top_bar_icon"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="12dp"
+        android:scaleType="fitCenter" />
+
     <TextView
         android:id="@+id/top_bar_title"
         android:layout_width="wrap_content"
