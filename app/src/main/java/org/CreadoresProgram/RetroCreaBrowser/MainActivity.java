@@ -77,7 +77,7 @@ public class MainActivity extends Activity{
         webSettings.setLoadWithOverviewMode(true);
         webSettings.setSaveFormData(true);
         webView.setBackgroundColor(Color.BLACK);
-        creaClient.loadUrl(webView, "https://www.google.com/");
+        creaClient.loadUrl(webView, "https://lite.duckduckgo.com/lite/");
     }
 
     private void updateTitle(String title){
