@@ -1,6 +1,7 @@
 package org.CreadoresProgram.RetroCreaBrowser;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Build;
 import android.graphics.Color;
@@ -15,7 +16,7 @@ import org.CreadoresProgram.RetroCreaBrowser.browserconfig.SetConfigOkClient;
 
 public class MainActivity extends Activity{
     private WebView webView;
-    private WebViewCREA creaClient;
+    private WebViewCreaClient creaClient;
     private TextView actionBarTitle;
 
     @Override
@@ -35,13 +36,13 @@ public class MainActivity extends Activity{
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD){
             SetConfigOkClient.configOkClient(creaClient.getNetClient());
         }
-        webview.setWebViewClient(creaClient);
+        webView.setWebViewClient(creaClient);
         WebSettings webSettings = webView.getSettings();
         webSettings.setJavaScriptEnabled(true);
         webSettings.setDomStorageEnabled(true);
         webSettings.setDatabaseEnabled(true);
         if(Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN_MR2){
-            webSettings.setDatabasePath(context.getApplicationContext().getDir("LocalStorageOld", Context.MODE_PRIVATE).getPath());
+            webSettings.setDatabasePath(getApplicationContext().getDir("LocalStorageOld", Context.MODE_PRIVATE).getPath());
             webSettings.setAppCachePath(getApplicationContext().getDir("cache", Context.MODE_PRIVATE).getPath());
             webSettings.setAppCacheEnabled(true);
             webView.setDrawingCacheEnabled(false);
