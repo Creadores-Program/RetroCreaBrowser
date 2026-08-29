@@ -24,7 +24,9 @@ public class MainActivity extends Activity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_main);
         this.webView = (WebView) findViewById(R.id.webview);
-        this.actionBarTitle = (TextView) findViewById(R.id.top_bar_title);
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD){
+            this.actionBarTitle = (TextView) findViewById(R.id.top_bar_title);
+        }
         webView.setWebChromeClient(new WebChromeClient(){
             @Override
             public void onReceivedTitle(WebView view, String title) {
