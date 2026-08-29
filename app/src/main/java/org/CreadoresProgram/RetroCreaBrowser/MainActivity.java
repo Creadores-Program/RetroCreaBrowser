@@ -62,11 +62,11 @@ public class MainActivity extends Activity{
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             webSettings.setMixedContentMode(WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE);
             CookieManager.getInstance().setAcceptThirdPartyCookies(webView, true);
-        } else {
+        }/* else {
             CookieManager.getInstance().setAcceptCookie(true);
-        }
+        }*/
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            webSettings.setDisabledActionModeMenuItems(WebSettings.MENU_ITEM_NONE);
+            //webSettings.setDisabledActionModeMenuItems(WebSettings.MENU_ITEM_NONE);
         }
         try{
           webSettings.setUserAgentString(creaClient.getUserAgent(webView, WebViewCreaClient.UserAgentsIds.WEBVIEW_MOBILE));
