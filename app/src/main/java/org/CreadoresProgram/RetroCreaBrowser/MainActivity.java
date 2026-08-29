@@ -34,11 +34,11 @@ public class MainActivity extends Activity{
                 updateTitle(title);
             }
         });
-        //this.creaClient = new WebViewCreaClient();
+        this.creaClient = new WebViewCreaClient();
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD){
-            //SetConfigOkClient.configOkClient(creaClient.getNetClient());
+            SetConfigOkClient.configOkClient(creaClient.getNetClient());
         }
-        //webView.setWebViewClient(creaClient);
+        webView.setWebViewClient(creaClient);
         WebSettings webSettings = webView.getSettings();
         webSettings.setJavaScriptEnabled(true);
         webSettings.setDomStorageEnabled(true);
