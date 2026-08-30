@@ -370,6 +370,17 @@ public class MainActivity extends Activity {
             }
         });
 
+        builder.setNeutralButton("Recargar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (webView != null && webView.getUrl() != null) {
+                    creaClient.loadUrl(webView, webView.getUrl());
+                }else if(webView != null){
+                    webView.reload();
+                }
+            }
+        });
+
         builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
