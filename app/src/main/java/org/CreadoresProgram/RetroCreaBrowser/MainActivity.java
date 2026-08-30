@@ -8,13 +8,17 @@ import android.os.Build;
 import android.graphics.Color;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.ColorDrawable;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebChromeClient;
 import android.webkit.CookieManager;
 import android.webkit.WebIconDatabase;
+import android.webkit.WebResourceRequest;
 import android.widget.TextView;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import org.CreadoresProgram.WebViewCREA.WebViewCreaClient;
 import org.CreadoresProgram.RetroCreaBrowser.browserconfig.SetConfigOkClient;
@@ -22,8 +26,14 @@ import org.CreadoresProgram.RetroCreaBrowser.browserconfig.SetConfigOkClient;
 public class MainActivity extends Activity{
     private WebView webView;
     private WebViewCreaClient creaClient;
+    private RelativeLayout actionBar;
     private TextView actionBarTitle;
     private ImageView actionBarIcon;
+    private Drawable originalActionBarTheme;
+    private Drawable originalXmlBackground;
+    private int originalStatusBarTheme;
+
+    private static final String SCHEME_COLOR_PREFIX = "app-color://";
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -32,8 +42,16 @@ public class MainActivity extends Activity{
         this.webView = (WebView) findViewById(R.id.webview);
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD){
             this.actionBarTitle = (TextView) findViewById(R.id.top_bar_title);
+            this.actionBar = (RelativeLayout) rootLayout.getChildAt(0);
+            originalXmlBackground = actionBar.getBackground();
             this.actionBarIcon = (ImageView) findViewById(R.id.top_bar_icon);
             WebIconDatabase.getInstance().open(getDir("icons", MODE_PRIVATE).getPath());
+        }
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB){
+            setDefautActionBarTheme();
+        }
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+            this.originalStatusBarTheme = getWindow().getStatusBarColor();
         }
         webView.setWebChromeClient(new WebChromeClient(){
             @Override
@@ -47,7 +65,55 @@ public class MainActivity extends Activity{
                 updateIcon(icon);
             }
         });
-        this.creaClient = new WebViewCreaClient();
+        this.creaClient = new WebViewCreaClient(){
+            @SuppressWarnings("deprecation")
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                if (url != null && url.startsWith(SCHEME_COLOR_PREFIX)) {
+                    applyDynamicColor(url.substring(SCHEME_COLOR_PREFIX.length()));
+                    return true;
+                }
+                return super.shouldOverrideUrlLoading(view, url);
+            }
+
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+                String url = request.getUrl().toString();
+                if (url != null && url.startsWith(SCHEME_COLOR_PREFIX)) {
+                    applyDynamicColor(url.substring(SCHEME_COLOR_PREFIX.length()));
+                    return true;
+                }
+                return super.shouldOverrideUrlLoading(view, request);
+            }
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+                String jsScript = "javascript:(function() {" +
+                    "try {" +
+                    "   var color = '';" +
+                    "   var meta = document.querySelector('meta[name=\"theme-color\"]');" +
+                    "   if (meta && meta.content) {" +
+                    "       color = meta.content;" +
+                    "   } else if (document.body) {" +
+                    "       var style = document.defaultView ? document.defaultView.getComputedStyle(document.body, null) : null;" +
+                    "       if (style && style.backgroundColor) {" +
+                    "           color = style.backgroundColor;" +
+                    "       } else if (document.body.style && document.body.style.backgroundColor) {" +
+                    "           color = document.body.style.backgroundColor;" +
+                    "       }" +
+                    "   }" +
+                    "   if (color && color !== 'rgba(0, 0, 0, 0)' && color !== 'transparent') {" +
+                    "       window.location.href = '" + SCHEME_COLOR_PREFIX + "' + encodeURIComponent(color);" +
+                    "   } else {" +
+                    "       window.location.href = '" + SCHEME_COLOR_PREFIX + "default';" +
+                    "   }" +
+                    "} catch(e) {" +
+                    "   window.location.href = '" + SCHEME_COLOR_PREFIX + "default';" +
+                    "}" +
+                    "})()";
+                webView.loadUrl(jsScript);
+            }
+        };
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD){
             SetConfigOkClient.configOkClient(creaClient.getNetClient());
         }
@@ -93,6 +159,80 @@ public class MainActivity extends Activity{
         creaClient.loadUrl(webView, "https://lite.duckduckgo.com/lite/");
     }
 
+    private void setDefautActionBarTheme(){
+        ActionBar actionBar = getActionBar();
+        if (actionBar != null) {
+            this.originalActionBarTheme = getResources().getDrawable(android.R.drawable.action_bar_background); 
+        }
+    }
+
+    private void applyDynamicColor(String color){
+        try{
+            color = java.net.URLDecoder.decode(color, "UTF-8");
+            if ("default".equals(colorStr) || colorStr.trim().length() == 0) {
+                resetDefaultBar();
+                return;
+            }
+            int parsedColor;
+            if (color.startsWith("rgb")) {
+                String[] numbers = color.replace("rgb(", "").replace(")", "").split(",");
+                int r = Integer.parseInt(numbers[0].trim());
+                int g = Integer.parseInt(numbers[1].trim());
+                int b = Integer.parseInt(numbers[2].trim());
+                parsedColor = Color.rgb(r, g, b);
+            } else {
+                parsedColor = Color.parseColor(color);
+            }
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                setColorActionBar(parsedColor);
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+                    getWindow().setStatusBarColor(parsedColor);
+                }
+            }else if (actionBar != null) {
+                actionBar.setBackgroundColor(parsedColor);
+                boolean isLight = isColorLight(parsedColor);
+                int textColor = isLight ? Color.BLACK : Color.WHITE;
+                if (actionBarTitle != null) {
+                    actionBarTitle.setTextColor(textColor);
+                }
+            }
+        }catch(Exception e){}
+    }
+
+    private boolean isColorLight(int color) {
+        int r = Color.red(color);
+        int g = Color.green(color);
+        int b = Color.blue(color);
+        return ((r * 299 + g * 587 + b * 114) / 1000.0) >= 128;
+    }
+
+    private void setColorActionBar(int color){
+        ActionBar actionBar = getActionBar();
+        if (actionBar != null) {
+            actionBar.setBackgroundDrawable(new ColorDrawable(color));
+        }
+    }
+
+    private void resetDefaultBar(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            resetDefaultActionBar();
+        }else{
+            actionBar.setBackgroundDrawable(originalXmlBackground);
+            actionBarTitle.setTextColor(Color.WHITE);
+        }
+    }
+
+    private void resetDefaultActionBar(){
+        ActionBar actionBar = getActionBar();
+        if (actionBar != null && originalActionBarTheme != null) {
+            actionBar.setBackgroundDrawable(originalActionBarTheme);
+        }
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+            getWindow().setStatusBarColor(originalStatusBarTheme);
+        }
+    }
+
     private void updateTitle(String title){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             updateActionBarTitle(title);
@@ -125,6 +265,16 @@ public class MainActivity extends Activity{
             actionBar.setIcon(new BitmapDrawable(getResources(), icon));
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        if (webView != null && webView.canGoBack()) {
+            webView.goBack();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
 
     @Override
     protected void onPause(){
