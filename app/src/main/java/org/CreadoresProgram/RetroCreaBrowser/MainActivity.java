@@ -41,14 +41,13 @@ public class MainActivity extends Activity{
                 super.onReceivedTitle(view, title);
                 updateTitle(title);
             }
-        });
-        this.creaClient = new WebViewCreaClient(){
             @Override
             public void onReceivedIcon(WebView view, Bitmap icon) {
                 super.onReceivedIcon(view, icon);
                 updateIcon(icon);
             }
-        };
+        });
+        this.creaClient = new WebViewCreaClient();
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD){
             SetConfigOkClient.configOkClient(creaClient.getNetClient());
         }
@@ -102,7 +101,7 @@ public class MainActivity extends Activity{
         }
     }
 
-    private void updateIcon(BitMap icon){
+    private void updateIcon(Bitmap icon){
         if(icon == null){
             return;
         }
@@ -120,7 +119,7 @@ public class MainActivity extends Activity{
         }
     }
 
-    private void updateActionBarIcon(BitMap icon){
+    private void updateActionBarIcon(Bitmap icon){
         ActionBar actionBar = getActionBar();
         if(actionBar != null){
             actionBar.setIcon(new BitmapDrawable(getResources(), icon));
