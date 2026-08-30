@@ -250,7 +250,7 @@ public class MainActivity extends Activity {
     }
 
     private boolean isAppAGenericBrowser(PackageManager pm, String packageName) {
-        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.example.com"));
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.example.com"));
         browserIntent.addCategory(Intent.CATEGORY_BROWSABLE);
 
         List<ResolveInfo> genericBrowsers = pm.queryIntentActivities(browserIntent, PackageManager.MATCH_DEFAULT_ONLY);
@@ -351,7 +351,10 @@ public class MainActivity extends Activity {
                         creaClient.loadUrl(webView, query);
                     } else if(query.startsWith("javascript:")){
                         creaClient.loadUrl(webView, query);
-                    } else {
+                    } else{
+                        if(openInExternalAppIfPossible(query)){
+                            return;
+                        }
                         int selectedPos = spinnerEngines.getSelectedItemPosition();
                         SearchEngineManager.Engine selectedEngine = engines.get(selectedPos);
                         try {
