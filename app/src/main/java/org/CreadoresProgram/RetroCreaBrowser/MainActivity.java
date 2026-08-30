@@ -242,7 +242,7 @@ public class MainActivity extends Activity {
 
         if (resolveInfo != null && resolveInfo.activityInfo != null) {
             String targetPackage = resolveInfo.activityInfo.packageName;
-            if (!targetPackage.equals(getPackageName())){
+            if (targetPackage.equals(getPackageName())){
                 return false;
             }
 
