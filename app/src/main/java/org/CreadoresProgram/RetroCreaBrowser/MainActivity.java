@@ -1,15 +1,20 @@
 package org.CreadoresProgram.RetroCreaBrowser;
 
 import android.app.Activity;
+import android.app.ActionBar;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Build;
 import android.graphics.Color;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebChromeClient;
 import android.webkit.CookieManager;
+import android.webkit.WebIconDatabase;
 import android.widget.TextView;
+import android.widget.ImageView;
 
 import org.CreadoresProgram.WebViewCREA.WebViewCreaClient;
 import org.CreadoresProgram.RetroCreaBrowser.browserconfig.SetConfigOkClient;
@@ -18,6 +23,7 @@ public class MainActivity extends Activity{
     private WebView webView;
     private WebViewCreaClient creaClient;
     private TextView actionBarTitle;
+    private ImageView actionBarIcon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -26,6 +32,8 @@ public class MainActivity extends Activity{
         this.webView = (WebView) findViewById(R.id.webview);
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD){
             this.actionBarTitle = (TextView) findViewById(R.id.top_bar_title);
+            this.actionBarIcon = (ImageView) findViewById(R.id.top_bar_icon);
+            WebIconDatabase.getInstance().open(getDir("icons", MODE_PRIVATE).getPath());
         }
         webView.setWebChromeClient(new WebChromeClient(){
             @Override
@@ -34,7 +42,13 @@ public class MainActivity extends Activity{
                 updateTitle(title);
             }
         });
-        this.creaClient = new WebViewCreaClient();
+        this.creaClient = new WebViewCreaClient(){
+            @Override
+            public void onReceivedIcon(WebView view, Bitmap icon) {
+                super.onReceivedIcon(view, icon);
+                updateIcon(icon);
+            }
+        };
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD){
             SetConfigOkClient.configOkClient(creaClient.getNetClient());
         }
@@ -82,18 +96,34 @@ public class MainActivity extends Activity{
 
     private void updateTitle(String title){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            updateActionBar(title);
-        } else {
-            if (actionBarTitle != null) {
-                actionBarTitle.setText(title);
-            }
+            updateActionBarTitle(title);
+        } else if (actionBarTitle != null) {
+            actionBarTitle.setText(title);
         }
     }
 
-    private void updateActionBar(String title) {
-        android.app.ActionBar actionBar = getActionBar();
+    private void updateIcon(BitMap icon){
+        if(icon == null){
+            return;
+        }
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB){
+            updateActionBarIcon(icon);
+        }else if(actionBarIcon != null){
+            actionBarIcon.setImageBitmap(icon);
+        }
+    }
+
+    private void updateActionBarTitle(String title) {
+        ActionBar actionBar = getActionBar();
         if (actionBar != null) {
             actionBar.setTitle(title);
+        }
+    }
+
+    private void updateActionBarIcon(BitMap icon){
+        ActionBar actionBar = getActionBar();
+        if(actionBar != null){
+            actionBar.setIcon(new BitmapDrawable(getResources(), icon));
         }
     }
 
@@ -142,6 +172,9 @@ public class MainActivity extends Activity{
                 webView = null;
             }
         });
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+            WebIconDatabase.getInstance().close();
+        }
         super.onDestroy();
     }
 }
