@@ -220,57 +220,69 @@ public class MainActivity extends Activity {
     private boolean openInExternalAppIfPossible(String url) {
         if (url == null) return false;
 
+        if (url.startsWith(SCHEME_COLOR_PREFIX) || url.startsWith("javascript:")) {
+            return false;
+        }
+
         Intent intent;
         try {
             if (url.startsWith("intent://")) {
                 intent = Intent.parseUri(url, Intent.URI_INTENT_SCHEME);
             } else {
                 intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                intent.addCategory(Intent.CATEGORY_BROWSABLE);
             }
-        } catch (URISyntaxException e) {
-            return false;
         } catch (Exception e) {
             return false;
         }
+        PackageManager pm = getPackageManager();
 
-        if (!url.startsWith("intent://")) {
-            intent.addCategory(Intent.CATEGORY_BROWSABLE);
+        Intent genericWebIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.google.com"));
+        genericWebIntent.addCategory(Intent.CATEGORY_BROWSABLE);
+        List<ResolveInfo> genericBrowsers = pm.queryIntentActivities(genericWebIntent, PackageManager.MATCH_DEFAULT_ONLY);
+
+        List<String> browserPackages = new ArrayList<String>();
+        if (genericBrowsers != null) {
+            for (ResolveInfo browser : genericBrowsers) {
+                if (browser.activityInfo != null) {
+                    browserPackages.add(browser.activityInfo.packageName);
+                }
+            }
         }
 
-        PackageManager pm = getPackageManager();
-        ResolveInfo resolveInfo = pm.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);
+        List<ResolveInfo> candidates = pm.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
+        List<String> validNativePackages = new ArrayList<String>();
 
-        if (resolveInfo != null && resolveInfo.activityInfo != null) {
-            String targetPackage = resolveInfo.activityInfo.packageName;
-            if (targetPackage.equals(getPackageName())){
+        if (candidates != null) {
+            for (ResolveInfo info : candidates) {
+                if (info.activityInfo == null) continue;
+                    String packageName = info.activityInfo.packageName;
+
+                if (!packageName.equals(getPackageName()) && !browserPackages.contains(packageName)) {
+                    validNativePackages.add(packageName);
+                }
+            }
+        }
+
+        if (validNativePackages.size() == 1) {
+            intent.setPackage(validNativePackages.get(0));
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            try {
+                startActivity(intent);
+                return true;
+            } catch (Exception e) {
                 return false;
             }
-
-            if (!isAppAGenericBrowser(pm, targetPackage)) {
-                try {
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
-                    return true;
-                } catch (Exception e) {
-                }
+        } else if (validNativePackages.size() > 1) {
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            try {
+                startActivity(intent);
+                return true;
+            } catch (Exception e) {
+                return false;
             }
         }
-        return false;
-    }
 
-    private boolean isAppAGenericBrowser(PackageManager pm, String packageName) {
-        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://"));
-        browserIntent.addCategory(Intent.CATEGORY_BROWSABLE);
-
-        List<ResolveInfo> genericBrowsers = pm.queryIntentActivities(browserIntent, PackageManager.MATCH_DEFAULT_ONLY);
-
-        if (genericBrowsers != null) {
-            for (ResolveInfo info : genericBrowsers) {
-                if (info.activityInfo != null && packageName.equals(info.activityInfo.packageName)) {
-                    return true;
-                }
-            }
-        }
         return false;
     }
 
