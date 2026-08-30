@@ -163,7 +163,7 @@ public class MainActivity extends Activity {
             webSettings.setDisabledActionModeMenuItems(WebSettings.MENU_ITEM_NONE);
         }
 
-        webSettings.setUserAgentString(creaClient.getUserAgent(webView, WebViewCreaClient.UserAgentsIds.WEBVIEW_MOBILE));
+        //webSettings.setUserAgentString(creaClient.getUserAgent(webView, WebViewCreaClient.UserAgentsIds.WEBVIEW_MOBILE));
         webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
         webSettings.setBuiltInZoomControls(false);
         webSettings.setDisplayZoomControls(false);
@@ -171,7 +171,6 @@ public class MainActivity extends Activity {
         webSettings.setUseWideViewPort(true);
         webSettings.setLoadWithOverviewMode(true);
         webSettings.setSaveFormData(true);
-        webView.setBackgroundColor(Color.BLACK);
         creaClient.loadUrl(webView, "https://lite.duckduckgo.com/lite/");
     }
 
