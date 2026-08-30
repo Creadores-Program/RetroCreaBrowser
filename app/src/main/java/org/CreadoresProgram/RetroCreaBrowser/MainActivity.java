@@ -161,7 +161,7 @@ public class MainActivity extends Activity {
         };
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD){
-            SetConfigOkClient.configOkClient(creaClient.getNetClient());
+            SetConfigOkClient.configOkClient(creaClient.getNetClient(), this);
         }
         
         webView.setWebViewClient(creaClient);
