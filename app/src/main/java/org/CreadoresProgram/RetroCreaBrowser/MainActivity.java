@@ -200,6 +200,7 @@ public class MainActivity extends Activity {
         webSettings.setBuiltInZoomControls(false);
         webSettings.setDisplayZoomControls(false);
         webSettings.setSupportZoom(true);
+        webSettings.setBuiltInZoomControls(true);
         webSettings.setUseWideViewPort(true);
         webSettings.setLoadWithOverviewMode(true);
         webSettings.setSaveFormData(true);
@@ -292,23 +293,6 @@ public class MainActivity extends Activity {
         layout.setOrientation(LinearLayout.VERTICAL);
         layout.setPadding(30, 20, 30, 10);
 
-        final TextView tvProgress = new TextView(this);
-        tvProgress.setText("Ajuste de Zoom / Escala");
-
-        final SeekBar seekBar = new SeekBar(this);
-        seekBar.setMax(100);
-        seekBar.setProgress(50);
-        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar sb, int progress, boolean fromUser) {
-                tvProgress.setText("Zoom: " + progress + "%");
-            }
-            @Override
-            public void onStartTrackingTouch(SeekBar sb) {}
-            @Override
-            public void onStopTrackingTouch(SeekBar sb) {}
-        });
-
         final List<SearchEngineManager.Engine> engines = SearchEngineManager.getEngines(this);
         List<String> engineNames = new ArrayList<String>();
         for (SearchEngineManager.Engine e : engines) {
@@ -342,8 +326,6 @@ public class MainActivity extends Activity {
             input.setText(webView.getUrl());
         }
 
-        layout.addView(tvProgress);
-        layout.addView(seekBar);
         layout.addView(spinnerEngines);
         layout.addView(input);
 
