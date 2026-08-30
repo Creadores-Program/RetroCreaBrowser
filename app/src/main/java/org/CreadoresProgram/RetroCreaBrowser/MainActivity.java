@@ -334,7 +334,7 @@ public class MainActivity extends Activity {
         });
 
         final EditText input = new EditText(this);
-        input.setHint(android.R.string.search_hint);
+        input.setHint("Escribe una URL o búsqueda...");
         if (webView != null && webView.getUrl() != null) {
             input.setText(webView.getUrl());
         }
