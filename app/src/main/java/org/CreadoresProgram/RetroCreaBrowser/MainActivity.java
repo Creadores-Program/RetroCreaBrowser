@@ -5,6 +5,10 @@ import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Build;
 import android.graphics.Color;
@@ -34,6 +38,7 @@ import android.widget.TextView;
 import org.CreadoresProgram.WebViewCREA.WebViewCreaClient;
 import org.CreadoresProgram.RetroCreaBrowser.browserconfig.SetConfigOkClient;
 
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,6 +78,7 @@ public class MainActivity extends Activity {
         }
         
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB){
+            setActionBarHomeBtn();
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
                 this.originalActionBarTheme = createHoloLayerDrawable(Color.parseColor("#33B5E5"));
             } else {
@@ -105,6 +111,9 @@ public class MainActivity extends Activity {
                     applyDynamicColor(url.substring(SCHEME_COLOR_PREFIX.length()));
                     return true;
                 }
+                if (openInExternalAppIfPossible(url)) {
+                    return true;
+                }
                 return super.shouldOverrideUrlLoading(view, url);
             }
 
@@ -113,6 +122,9 @@ public class MainActivity extends Activity {
                 String url = request.getUrl().toString();
                 if (url != null && url.startsWith(SCHEME_COLOR_PREFIX)) {
                     applyDynamicColor(url.substring(SCHEME_COLOR_PREFIX.length()));
+                    return true;
+                }
+                if (openInExternalAppIfPossible(url)) {
                     return true;
                 }
                 return super.shouldOverrideUrlLoading(view, request);
@@ -191,7 +203,78 @@ public class MainActivity extends Activity {
         webSettings.setUseWideViewPort(true);
         webSettings.setLoadWithOverviewMode(true);
         webSettings.setSaveFormData(true);
+        Intent intent = getIntent();
+        if (intent != null && Intent.ACTION_VIEW.equals(intent.getAction())) {
+            Uri data = intent.getData();
+            if (data != null) {
+                String url = data.toString();
+                creaClient.loadUrl(webView, url);
+                return;
+            }
+        }
         creaClient.loadUrl(webView, "https://lite.duckduckgo.com/lite/");
+    }
+
+    private boolean openInExternalAppIfPossible(String url) {
+        if (url == null) return false;
+
+        Intent intent;
+        try {
+            if (url.startsWith("intent://")) {
+                intent = Intent.parseUri(url, Intent.URI_INTENT_SCHEME);
+            } else {
+                intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+            }
+        } catch (URISyntaxException e) {
+            return false;
+        } catch (Exception e) {
+            return false;
+        }
+
+        PackageManager pm = getPackageManager();
+        ResolveInfo resolveInfo = pm.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);
+
+        if (resolveInfo != null && resolveInfo.activityInfo != null) {
+            String targetPackage = resolveInfo.activityInfo.packageName;
+
+            if (!targetPackage.equals(getPackageName()) && !isAppAGenericBrowser(pm, targetPackage)) {
+                try {
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                    return true;
+                } catch (Exception e) {
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean isAppAGenericBrowser(PackageManager pm, String packageName) {
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.example.com"));
+        browserIntent.addCategory(Intent.CATEGORY_BROWSABLE);
+
+        List<ResolveInfo> genericBrowsers = pm.queryIntentActivities(browserIntent, PackageManager.MATCH_DEFAULT_ONLY);
+
+        if (genericBrowsers != null) {
+            for (ResolveInfo info : genericBrowsers) {
+                if (info.activityInfo != null && packageName.equals(info.activityInfo.packageName)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        if (intent != null && Intent.ACTION_VIEW.equals(intent.getAction())) {
+            Uri data = intent.getData();
+            if (data != null) {
+                creaClient.loadUrl(webView, data.toString());
+            }
+        }
     }
 
     private void showSearchDialog() {
@@ -290,6 +373,14 @@ public class MainActivity extends Activity {
         }).setCancelable(false);
 
         builder.show();
+    }
+
+    private void setActionBarHomeBtn(){
+        ActionBar actionBar = getActionBar();
+        if(actionBar != null){
+            actionBar.setHomeButtonEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(false);
+        }
     }
 
     private void applyDynamicColor(String color){
@@ -423,6 +514,15 @@ public class MainActivity extends Activity {
         } else {
             super.onBackPressed();
         }
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(android.view.MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            showSearchDialog();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
