@@ -231,13 +231,20 @@ public class MainActivity extends Activity {
             return false;
         }
 
+        if (!url.startsWith("intent://")) {
+            intent.addCategory(Intent.CATEGORY_BROWSABLE);
+        }
+
         PackageManager pm = getPackageManager();
         ResolveInfo resolveInfo = pm.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);
 
         if (resolveInfo != null && resolveInfo.activityInfo != null) {
             String targetPackage = resolveInfo.activityInfo.packageName;
+            if (!targetPackage.equals(getPackageName())){
+                return false;
+            }
 
-            if (!targetPackage.equals(getPackageName()) && !isAppAGenericBrowser(pm, targetPackage)) {
+            if (!isAppAGenericBrowser(pm, targetPackage)) {
                 try {
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
@@ -250,7 +257,7 @@ public class MainActivity extends Activity {
     }
 
     private boolean isAppAGenericBrowser(PackageManager pm, String packageName) {
-        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.example.com"));
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://"));
         browserIntent.addCategory(Intent.CATEGORY_BROWSABLE);
 
         List<ResolveInfo> genericBrowsers = pm.queryIntentActivities(browserIntent, PackageManager.MATCH_DEFAULT_ONLY);
