@@ -2,7 +2,9 @@ package org.CreadoresProgram.RetroCreaBrowser;
 
 import android.app.Activity;
 import android.app.ActionBar;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Build;
 import android.graphics.Color;
@@ -12,18 +14,28 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.LayerDrawable;
 import android.util.TypedValue;
+import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebChromeClient;
 import android.webkit.CookieManager;
 import android.webkit.WebIconDatabase;
 import android.webkit.WebResourceRequest;
-import android.widget.TextView;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.SeekBar;
+import android.widget.Spinner;
+import android.widget.TextView;
 
 import org.CreadoresProgram.WebViewCREA.WebViewCreaClient;
 import org.CreadoresProgram.RetroCreaBrowser.browserconfig.SetConfigOkClient;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends Activity {
     private WebView webView;
@@ -49,6 +61,15 @@ public class MainActivity extends Activity {
             originalXmlBackground = actionBar.getBackground();
             this.actionBarIcon = (ImageView) findViewById(R.id.top_bar_icon);
             WebIconDatabase.getInstance().open(getDir("icons", MODE_PRIVATE).getPath());
+
+            if (this.actionBar != null) {
+                this.actionBar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showSearchDialog();
+                    }
+                });
+            }
         }
         
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB){
@@ -163,15 +184,112 @@ public class MainActivity extends Activity {
             webSettings.setDisabledActionModeMenuItems(WebSettings.MENU_ITEM_NONE);
         }
 
-        //webSettings.setUserAgentString(creaClient.getUserAgent(webView, WebViewCreaClient.UserAgentsIds.WEBVIEW_MOBILE));
         webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
         webSettings.setBuiltInZoomControls(false);
         webSettings.setDisplayZoomControls(false);
-        webSettings.setSupportZoom(false);
+        webSettings.setSupportZoom(true);
         webSettings.setUseWideViewPort(true);
         webSettings.setLoadWithOverviewMode(true);
         webSettings.setSaveFormData(true);
         creaClient.loadUrl(webView, "https://lite.duckduckgo.com/lite/");
+    }
+
+    private void showSearchDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Navegar o Buscar");
+
+        LinearLayout layout = new LinearLayout(this);
+        layout.setOrientation(LinearLayout.VERTICAL);
+        layout.setPadding(30, 20, 30, 10);
+
+        final TextView tvProgress = new TextView(this);
+        tvProgress.setText("Ajuste de Zoom / Escala");
+
+        final SeekBar seekBar = new SeekBar(this);
+        seekBar.setMax(100);
+        seekBar.setProgress(50);
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar sb, int progress, boolean fromUser) {
+                tvProgress.setText("Zoom: " + progress + "%");
+            }
+            @Override
+            public void onStartTrackingTouch(SeekBar sb) {}
+            @Override
+            public void onStopTrackingTouch(SeekBar sb) {}
+        });
+
+        final List<SearchEngineManager.Engine> engines = SearchEngineManager.getEngines(this);
+        List<String> engineNames = new ArrayList<String>();
+        for (SearchEngineManager.Engine e : engines) {
+            engineNames.add(e.name);
+        }
+
+        final Spinner spinnerEngines = new Spinner(this);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+            this, android.R.layout.simple_spinner_item, engineNames
+        );
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerEngines.setAdapter(adapter);
+
+        int savedIndex = SearchEngineManager.getSelectedEngineIndex(this);
+        if (savedIndex < engines.size()) {
+            spinnerEngines.setSelection(savedIndex);
+        }
+
+        spinnerEngines.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                SearchEngineManager.setSelectedEngineIndex(MainActivity.this, position);
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
+        });
+
+        final EditText input = new EditText(this);
+        input.setHint("Escribe una URL o búsqueda...");
+        if (webView != null && webView.getUrl() != null) {
+            input.setText(webView.getUrl());
+        }
+
+        layout.addView(tvProgress);
+        layout.addView(seekBar);
+        layout.addView(spinnerEngines);
+        layout.addView(input);
+
+        builder.setView(layout);
+
+        builder.setPositiveButton("Ir / Buscar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String query = input.getText().toString().trim();
+                if (query.length() > 0) {
+                    if (query.startsWith("http://") || query.startsWith("https://")) {
+                        creaClient.loadUrl(webView, query);
+                    } else if(query.startsWith("javascript:")){
+                        creaClient.loadUrl(webView, query);
+                    } else {
+                        int selectedPos = spinnerEngines.getSelectedItemPosition();
+                        SearchEngineManager.Engine selectedEngine = engines.get(selectedPos);
+                        try {
+                            String searchUrl = String.format(selectedEngine.searchUrl, java.net.URLEncoder.encode(query, "UTF-8"));
+                            creaClient.loadUrl(webView, searchUrl);
+                        } catch (Exception e) {
+                            creaClient.loadUrl(webView, selectedEngine.searchUrl.replace("%s", query));
+                        }
+                    }
+                }
+            }
+        });
+
+        builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        }).setCancelable(false);
+
+        builder.show();
     }
 
     private void applyDynamicColor(String color){
