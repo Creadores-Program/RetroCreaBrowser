@@ -42,7 +42,7 @@ public class MainActivity extends Activity{
         this.webView = (WebView) findViewById(R.id.webview);
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD){
             this.actionBarTitle = (TextView) findViewById(R.id.top_bar_title);
-            this.actionBar = (RelativeLayout) rootLayout.getChildAt(0);
+            this.actionBar = (RelativeLayout) actionBarTitle.getParent();
             originalXmlBackground = actionBar.getBackground();
             this.actionBarIcon = (ImageView) findViewById(R.id.top_bar_icon);
             WebIconDatabase.getInstance().open(getDir("icons", MODE_PRIVATE).getPath());
@@ -169,7 +169,7 @@ public class MainActivity extends Activity{
     private void applyDynamicColor(String color){
         try{
             color = java.net.URLDecoder.decode(color, "UTF-8");
-            if ("default".equals(colorStr) || colorStr.trim().length() == 0) {
+            if ("default".equals(color) || color.trim().length() == 0) {
                 resetDefaultBar();
                 return;
             }
