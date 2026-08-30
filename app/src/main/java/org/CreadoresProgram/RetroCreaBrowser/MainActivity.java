@@ -300,7 +300,7 @@ public class MainActivity extends Activity {
 
     private void showSearchDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Navegar o Buscar");
+        builder.setTitle(R.string.app_name);
 
         LinearLayout layout = new LinearLayout(this);
         layout.setOrientation(LinearLayout.VERTICAL);
@@ -334,7 +334,7 @@ public class MainActivity extends Activity {
         });
 
         final EditText input = new EditText(this);
-        input.setHint("Escribe una URL o búsqueda...");
+        input.setHint(​android.R.string.search_hint);
         if (webView != null && webView.getUrl() != null) {
             input.setText(webView.getUrl());
         }
@@ -344,7 +344,7 @@ public class MainActivity extends Activity {
 
         builder.setView(layout);
 
-        builder.setPositiveButton("Ir / Buscar", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(android.R.string.search_go, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String query = input.getText().toString().trim();
