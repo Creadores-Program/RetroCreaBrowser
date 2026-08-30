@@ -48,7 +48,7 @@ public class MainActivity extends Activity{
             WebIconDatabase.getInstance().open(getDir("icons", MODE_PRIVATE).getPath());
         }
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB){
-            setDefautActionBarTheme();
+            this.originalActionBarTheme = new ColorDrawable(Color.parseColor("#1A1A1A"));
         }
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
             this.originalStatusBarTheme = getWindow().getStatusBarColor();
@@ -159,12 +159,6 @@ public class MainActivity extends Activity{
         creaClient.loadUrl(webView, "https://lite.duckduckgo.com/lite/");
     }
 
-    private void setDefautActionBarTheme(){
-        ActionBar actionBar = getActionBar();
-        if (actionBar != null) {
-            this.originalActionBarTheme = getResources().getDrawable(android.R.drawable.action_bar_background); 
-        }
-    }
 
     private void applyDynamicColor(String color){
         try{
