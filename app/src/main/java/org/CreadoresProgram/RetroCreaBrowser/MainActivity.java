@@ -10,6 +10,8 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.LayerDrawable;
+import android.util.TypedValue;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebChromeClient;
@@ -23,7 +25,7 @@ import android.widget.RelativeLayout;
 import org.CreadoresProgram.WebViewCREA.WebViewCreaClient;
 import org.CreadoresProgram.RetroCreaBrowser.browserconfig.SetConfigOkClient;
 
-public class MainActivity extends Activity{
+public class MainActivity extends Activity {
     private WebView webView;
     private WebViewCreaClient creaClient;
     private RelativeLayout actionBar;
@@ -40,6 +42,7 @@ public class MainActivity extends Activity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_main);
         this.webView = (WebView) findViewById(R.id.webview);
+        
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD){
             this.actionBarTitle = (TextView) findViewById(R.id.top_bar_title);
             this.actionBar = (RelativeLayout) actionBarTitle.getParent();
@@ -47,12 +50,19 @@ public class MainActivity extends Activity{
             this.actionBarIcon = (ImageView) findViewById(R.id.top_bar_icon);
             WebIconDatabase.getInstance().open(getDir("icons", MODE_PRIVATE).getPath());
         }
+        
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB){
-            this.originalActionBarTheme = new ColorDrawable(Color.parseColor("#1A1A1A"));
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+                this.originalActionBarTheme = createHoloLayerDrawable(Color.parseColor("#33B5E5"));
+            } else {
+                this.originalActionBarTheme = new ColorDrawable(Color.parseColor("#1A1A1A"));
+            }
         }
+        
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
             this.originalStatusBarTheme = getWindow().getStatusBarColor();
         }
+
         webView.setWebChromeClient(new WebChromeClient(){
             @Override
             public void onReceivedTitle(WebView view, String title) {
@@ -65,6 +75,7 @@ public class MainActivity extends Activity{
                 updateIcon(icon);
             }
         });
+
         this.creaClient = new WebViewCreaClient(){
             @SuppressWarnings("deprecation")
             @Override
@@ -85,6 +96,7 @@ public class MainActivity extends Activity{
                 }
                 return super.shouldOverrideUrlLoading(view, request);
             }
+
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
@@ -114,14 +126,17 @@ public class MainActivity extends Activity{
                 webView.loadUrl(jsScript);
             }
         };
+
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD){
             SetConfigOkClient.configOkClient(creaClient.getNetClient());
         }
+        
         webView.setWebViewClient(creaClient);
         WebSettings webSettings = webView.getSettings();
         webSettings.setJavaScriptEnabled(true);
         webSettings.setDomStorageEnabled(true);
         webSettings.setDatabaseEnabled(true);
+
         if(Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN_MR2){
             webSettings.setDatabasePath(getApplicationContext().getDir("LocalStorageOld", Context.MODE_PRIVATE).getPath());
             webSettings.setAppCachePath(getApplicationContext().getDir("cache", Context.MODE_PRIVATE).getPath());
@@ -147,6 +162,7 @@ public class MainActivity extends Activity{
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             webSettings.setDisabledActionModeMenuItems(WebSettings.MENU_ITEM_NONE);
         }
+
         webSettings.setUserAgentString(creaClient.getUserAgent(webView, WebViewCreaClient.UserAgentsIds.WEBVIEW_MOBILE));
         webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
         webSettings.setBuiltInZoomControls(false);
@@ -158,7 +174,6 @@ public class MainActivity extends Activity{
         webView.setBackgroundColor(Color.BLACK);
         creaClient.loadUrl(webView, "https://lite.duckduckgo.com/lite/");
     }
-
 
     private void applyDynamicColor(String color){
         try{
@@ -183,7 +198,7 @@ public class MainActivity extends Activity{
                 if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
                     getWindow().setStatusBarColor(parsedColor);
                 }
-            }else if (actionBar != null) {
+            } else if (actionBar != null) {
                 actionBar.setBackgroundColor(parsedColor);
                 boolean isLight = isColorLight(parsedColor);
                 int textColor = isLight ? Color.BLACK : Color.WHITE;
@@ -191,7 +206,7 @@ public class MainActivity extends Activity{
                     actionBarTitle.setTextColor(textColor);
                 }
             }
-        }catch(Exception e){}
+        } catch(Exception e){}
     }
 
     private boolean isColorLight(int color) {
@@ -204,16 +219,40 @@ public class MainActivity extends Activity{
     private void setColorActionBar(int color){
         ActionBar actionBar = getActionBar();
         if (actionBar != null) {
-            actionBar.setBackgroundDrawable(new ColorDrawable(color));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB 
+                && Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+                actionBar.setBackgroundDrawable(createHoloLayerDrawable(color));
+            } else {
+                actionBar.setBackgroundDrawable(new ColorDrawable(color));
+            }
         }
+    }
+
+    private Drawable createHoloLayerDrawable(int accentColor) {
+        ColorDrawable baseBackground = new ColorDrawable(Color.parseColor("#1A1A1A"));
+        ColorDrawable accentLine = new ColorDrawable(accentColor);
+
+        Drawable[] layers = new Drawable[]{ baseBackground, accentLine };
+        LayerDrawable layerDrawable = new LayerDrawable(layers);
+
+        int actionBarHeight = 48;
+        TypedValue tv = new TypedValue();
+        if (getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
+            actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data, getResources().getDisplayMetrics());
+        }
+
+        layerDrawable.setLayerInset(1, 0, actionBarHeight - 4, 0, 0);
+        return layerDrawable;
     }
 
     private void resetDefaultBar(){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             resetDefaultActionBar();
-        }else{
+        } else if (actionBar != null) {
             actionBar.setBackgroundDrawable(originalXmlBackground);
-            actionBarTitle.setTextColor(Color.WHITE);
+            if (actionBarTitle != null) {
+                actionBarTitle.setTextColor(Color.WHITE);
+            }
         }
     }
 
@@ -241,7 +280,7 @@ public class MainActivity extends Activity{
         }
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB){
             updateActionBarIcon(icon);
-        }else if(actionBarIcon != null){
+        } else if(actionBarIcon != null){
             actionBarIcon.setImageBitmap(icon);
         }
     }
@@ -269,7 +308,6 @@ public class MainActivity extends Activity{
         }
     }
 
-
     @Override
     protected void onPause(){
         super.onPause();
@@ -277,7 +315,7 @@ public class MainActivity extends Activity{
             webView.pauseTimers();
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB){
                 webView.onPause();
-            }else{
+            } else {
               try {
                   Class.forName("android.webkit.WebView")
                       .getMethod("onPause")
@@ -288,6 +326,7 @@ public class MainActivity extends Activity{
             }
         }
     }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -295,7 +334,7 @@ public class MainActivity extends Activity{
             webView.resumeTimers();
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB){
               webView.onResume();
-            }else{
+            } else {
               try {
                   Class.forName("android.webkit.WebView")
                       .getMethod("onResume")
@@ -306,15 +345,20 @@ public class MainActivity extends Activity{
             }
         }
     }
+
     @Override
     protected void onDestroy() {
-        webView.post(new Runnable(){
-            @Override
-            public void run(){
-                webView.destroy();
-                webView = null;
-            }
-        });
+        if (webView != null) {
+            webView.post(new Runnable(){
+                @Override
+                public void run(){
+                    if (webView != null) {
+                        webView.destroy();
+                        webView = null;
+                    }
+                }
+            });
+        }
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
             WebIconDatabase.getInstance().close();
         }
