@@ -237,7 +237,7 @@ public class MainActivity extends Activity {
         }
         PackageManager pm = getPackageManager();
 
-        Intent genericWebIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.google.com"));
+        Intent genericWebIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.google.com"));
         genericWebIntent.addCategory(Intent.CATEGORY_BROWSABLE);
         List<ResolveInfo> genericBrowsers = pm.queryIntentActivities(genericWebIntent, PackageManager.MATCH_DEFAULT_ONLY);
 
@@ -264,8 +264,10 @@ public class MainActivity extends Activity {
             }
         }
 
-        if (validNativePackages.size() == 1) {
-            intent.setPackage(validNativePackages.get(0));
+        if (validNativePackages.size() >= 1) {
+            if (validNativePackages.size() == 1) {
+                intent.setPackage(validNativePackages.get(0));
+            }
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             try {
                 startActivity(intent);
