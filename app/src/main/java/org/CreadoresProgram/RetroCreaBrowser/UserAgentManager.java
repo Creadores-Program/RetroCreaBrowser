@@ -42,6 +42,15 @@ public class UserAgentManager {
             return webView.getSettings().getUserAgentString();
         }
 
+        public boolean isDesktop() {
+            if (isRemote && remoteUa != null) {
+                return remoteUa.name().endsWith("DESK");
+            } else if (!isRemote && localUa != null) {
+                return localUa.name().endsWith("DESK");
+            }
+            return false;
+        }
+
         @Override
         public String toString() {
             return displayName;
@@ -80,6 +89,9 @@ public class UserAgentManager {
             UserAgentItem item = list.get(index);
             String uaString = item.resolveUserAgent(webView, creaClient);
             webView.getSettings().setUserAgentString(uaString);
+            if (creaClient != null) {
+                creaClient.setDesktop(item.isDesktop());
+            }
         }
     }
 
@@ -90,6 +102,9 @@ public class UserAgentManager {
             UserAgentItem item = list.get(index);
             String uaString = item.resolveUserAgent(webView, creaClient);
             webView.getSettings().setUserAgentString(uaString);
+            if (creaClient != null) {
+                creaClient.setDesktop(item.isDesktop());
+            }
         }
     }
 }
