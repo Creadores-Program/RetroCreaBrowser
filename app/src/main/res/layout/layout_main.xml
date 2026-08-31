@@ -19,5 +19,5 @@
         android:background="@android:color/transparent"
         android:indeterminate="false"
         android:max="100"
-        android:visibility="gone" />
+        android:visibility="invisible" />
 </RelativeLayout>
