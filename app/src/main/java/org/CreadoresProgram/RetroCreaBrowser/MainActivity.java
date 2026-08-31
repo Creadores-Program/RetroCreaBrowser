@@ -361,6 +361,7 @@ public class MainActivity extends Activity {
             input.setText(webView.getUrl());
         }
 
+        layout.addView(spinnerUserAgents);
         layout.addView(spinnerEngines);
         layout.addView(input);
 
