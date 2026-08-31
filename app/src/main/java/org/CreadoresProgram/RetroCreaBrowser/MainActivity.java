@@ -102,13 +102,13 @@ public class MainActivity extends Activity {
                 super.onProgressChanged(view, newProgress);
                 if (progressBar != null) {
                     if (newProgress < 100) {
-                        if (progressBar.getVisibility() == View.GONE) {
+                        if (progressBar.getVisibility() == View.INVISIBLE) {
                             progressBar.setVisibility(View.VISIBLE);
                         }
                         progressBar.setProgress(newProgress);
                     } else {
                         progressBar.setProgress(100);
-                        progressBar.setVisibility(View.GONE);
+                        progressBar.setVisibility(View.INVISIBLE);
                     }
                 }
             }
