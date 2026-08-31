@@ -275,14 +275,6 @@ public class MainActivity extends Activity {
             } catch (Exception e) {
                 return false;
             }
-        } else if (validNativePackages.size() > 1) {
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            try {
-                startActivity(intent);
-                return true;
-            } catch (Exception e) {
-                return false;
-            }
         }
 
         return false;
