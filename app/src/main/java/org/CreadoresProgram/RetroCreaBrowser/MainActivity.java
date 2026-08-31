@@ -64,7 +64,7 @@ public class MainActivity extends Activity {
         
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD){
             this.actionBarTitle = (TextView) findViewById(R.id.top_bar_title);
-            this.actionBar = (RelativeLayout) actionBarTitle.getParent();
+            this.actionBar = (RelativeLayout) findViewById(R.id.top_bar_container);
             originalXmlBackground = actionBar.getBackground();
             this.actionBarIcon = (ImageView) findViewById(R.id.top_bar_icon);
             WebIconDatabase.getInstance().open(getDir("icons", MODE_PRIVATE).getPath());
