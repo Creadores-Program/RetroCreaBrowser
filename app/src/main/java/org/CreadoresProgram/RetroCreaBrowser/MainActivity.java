@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.Build;
 import android.graphics.Color;
 import android.graphics.Bitmap;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ColorDrawable;
@@ -30,6 +31,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.Spinner;
@@ -46,6 +48,7 @@ import java.util.HashSet;
 
 public class MainActivity extends Activity {
     private WebView webView;
+    private ProgressBar progressBar;
     private WebViewCreaClient creaClient;
     private RelativeLayout actionBar;
     private TextView actionBarTitle;
@@ -61,6 +64,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_main);
         this.webView = (WebView) findViewById(R.id.webview);
+        this.progressBar = (ProgressBar) findViewById(R.id.progressBar);
         
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD){
             this.actionBarTitle = (TextView) findViewById(R.id.top_bar_title);
@@ -93,6 +97,21 @@ public class MainActivity extends Activity {
         }
 
         webView.setWebChromeClient(new WebChromeClient(){
+            @Override
+            public void onProgressChanged(WebView view, int newProgress) {
+                super.onProgressChanged(view, newProgress);
+                if (progressBar != null) {
+                    if (newProgress < 100) {
+                        if (progressBar.getVisibility() == View.GONE) {
+                            progressBar.setVisibility(View.VISIBLE);
+                        }
+                        progressBar.setProgress(newProgress);
+                    } else {
+                        progressBar.setProgress(100);
+                        progressBar.setVisibility(View.GONE);
+                    }
+                }
+            }
             @Override
             public void onReceivedTitle(WebView view, String title) {
                 super.onReceivedTitle(view, title);
@@ -436,6 +455,19 @@ public class MainActivity extends Activity {
                 parsedColor = Color.parseColor(color);
             }
 
+            int invertedColor = Color.rgb(
+                255 - Color.red(parsedColor),
+                255 - Color.green(parsedColor),
+                255 - Color.blue(parsedColor)
+            );
+
+            if (progressBar != null) {
+                Drawable progressDrawable = progressBar.getProgressDrawable();
+                if (progressDrawable != null) {
+                    progressDrawable.mutate().setColorFilter(invertedColor, PorterDuff.Mode.SRC_IN);
+                }
+            }
+
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
                 setColorActionBar(parsedColor);
                 if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
@@ -489,6 +521,12 @@ public class MainActivity extends Activity {
     }
 
     private void resetDefaultBar(){
+        if (progressBar != null) {
+            Drawable progressDrawable = progressBar.getProgressDrawable();
+            if (progressDrawable != null) {
+                progressDrawable.mutate().clearColorFilter();
+            }
+        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             resetDefaultActionBar();
         } else if (actionBar != null) {
