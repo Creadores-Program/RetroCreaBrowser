@@ -5,9 +5,18 @@
     <include
         android:id="@+id/top_bar_container"
         layout="@layout/top_bar" />
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:layout_below="@+id/top_bar_container"
+        android:indeterminate="false"
+        android:max="100"
+        android:visibility="gone" />
     <WebView
         android:id="@+id/webview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/top_bar_container" />
+        android:layout_below="@+id/progressBar" />
 </RelativeLayout>
