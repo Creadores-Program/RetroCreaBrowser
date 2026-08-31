@@ -342,8 +342,8 @@ public class MainActivity extends Activity {
         ArrayAdapter<UserAgentManager.UserAgentItem> adapterUA = new ArrayAdapter<UserAgentManager.UserAgentItem>(this, android.R.layout.simple_spinner_item, userAgents);
         adapterUA.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerUserAgents.setAdapter(adapterUA);
-        int savedUaIndex = getSavedUserAgentIndex();
-        if (savedUaIndex < uaList.size()) {
+        int savedUaIndex = UserAgentManager.getSelectedUserAgentIndex(this);
+        if (savedUaIndex < userAgents.size()) {
             spinnerUserAgents.setSelection(savedUaIndex);
         }
         spinnerUserAgents.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -395,7 +395,7 @@ public class MainActivity extends Activity {
         builder.setNeutralButton("Recargar", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                creaClient.reload();
+                creaClient.reload(webView);
             }
         });
 
