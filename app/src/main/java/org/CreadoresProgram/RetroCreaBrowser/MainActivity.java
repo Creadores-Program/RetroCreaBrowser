@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Build;
@@ -205,6 +206,7 @@ public class MainActivity extends Activity {
         webSettings.setLoadWithOverviewMode(true);
         webSettings.setSaveFormData(true);
         webView.setInitialScale(0);
+        UserAgentManager.applySelectedUserAgent(this, webView, creaClient);
         Intent intent = getIntent();
         if (intent != null && Intent.ACTION_VIEW.equals(intent.getAction())) {
             Uri data = intent.getData();
@@ -334,6 +336,24 @@ public class MainActivity extends Activity {
             public void onNothingSelected(AdapterView<?> parent) {}
         });
 
+        final List<UserAgentManager.UserAgentItem> userAgents = UserAgentManager.getUserAgents();
+        final Spinner spinnerUserAgents = new Spinner(this);
+        ArrayAdapter<UserAgentManager.UserAgentItem> adapterUA = new ArrayAdapter<UserAgentManager.UserAgentItem>(this, android.R.layout.simple_spinner_item, userAgents);
+        adapterUA.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerUserAgents.setAdapter(adapterUA);
+        int savedUaIndex = getSavedUserAgentIndex();
+        if (savedUaIndex < uaList.size()) {
+            spinnerUserAgents.setSelection(savedUaIndex);
+        }
+        spinnerUserAgents.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                UserAgentManager.applyUserAgentAtIndex(MainActivity.this, webView, creaClient, position);
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
+        });
+
         final EditText input = new EditText(this);
         input.setHint("Escribe una URL o búsqueda...");
         if (webView != null && webView.getUrl() != null) {
@@ -374,11 +394,7 @@ public class MainActivity extends Activity {
         builder.setNeutralButton("Recargar", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                if (webView != null && webView.getUrl() != null) {
-                    creaClient.loadUrl(webView, webView.getUrl());
-                }else if(webView != null){
-                    webView.reload();
-                }
+                creaClient.reload();
             }
         });
 
