@@ -329,6 +329,10 @@ public class MainActivity extends Activity {
         layout.setOrientation(LinearLayout.VERTICAL);
         layout.setPadding(30, 20, 30, 10);
 
+        TextView tvEngine = new TextView(this);
+        tvEngine.setText("Motor de búsqueda:");
+        tvEngine.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+        tvEngine.setPadding(0, 15, 0, 5);
         final List<SearchEngineManager.Engine> engines = SearchEngineManager.getEngines(this);
         List<String> engineNames = new ArrayList<String>();
         for (SearchEngineManager.Engine e : engines) {
@@ -356,6 +360,10 @@ public class MainActivity extends Activity {
             public void onNothingSelected(AdapterView<?> parent) {}
         });
 
+        TextView tvUserAgent = new TextView(this);
+        tvUserAgent.setText("Agente de Usuario:");
+        tvUserAgent.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+        tvUserAgent.setPadding(0, 10, 0, 5);
         final List<UserAgentManager.UserAgentItem> userAgents = UserAgentManager.getUserAgents();
         final Spinner spinnerUserAgents = new Spinner(this);
         ArrayAdapter<UserAgentManager.UserAgentItem> adapterUA = new ArrayAdapter<UserAgentManager.UserAgentItem>(this, android.R.layout.simple_spinner_item, userAgents);
@@ -379,8 +387,11 @@ public class MainActivity extends Activity {
         if (webView != null && webView.getUrl() != null) {
             input.setText(webView.getUrl());
         }
+        input.setSelectAllOnFocus(true);
 
+        layout.addView(tvUserAgent);
         layout.addView(spinnerUserAgents);
+        layout.addView(tvEngine);
         layout.addView(spinnerEngines);
         layout.addView(input);
 
