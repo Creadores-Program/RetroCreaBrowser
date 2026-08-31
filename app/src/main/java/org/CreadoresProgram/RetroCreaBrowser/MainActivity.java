@@ -241,12 +241,19 @@ public class MainActivity extends Activity {
         genericWebIntent.addCategory(Intent.CATEGORY_BROWSABLE);
         List<ResolveInfo> genericBrowsers = pm.queryIntentActivities(genericWebIntent, PackageManager.MATCH_DEFAULT_ONLY);
 
-        List<String> browserPackages = new ArrayList<String>();
-        if (genericBrowsers != null) {
-            for (ResolveInfo browser : genericBrowsers) {
-                if (browser.activityInfo != null) {
-                    browserPackages.add(browser.activityInfo.packageName);
-                }
+        Set<String> browserPackages = new HashSet<String>();
+        Intent httpIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.google.com")).addCategory(Intent.CATEGORY_BROWSABLE);
+        Intent httpsIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.google.com")).addCategory(Intent.CATEGORY_BROWSABLE);
+        List<ResolveInfo> httpBrowsers = pm.queryIntentActivities(httpIntent, PackageManager.MATCH_DEFAULT_ONLY);
+        if (httpBrowsers != null) {
+            for (ResolveInfo b : httpBrowsers) {
+                if (b.activityInfo != null) browserPackages.add(b.activityInfo.packageName);
+            }
+        }
+        List<ResolveInfo> httpsBrowsers = pm.queryIntentActivities(httpsIntent, PackageManager.MATCH_DEFAULT_ONLY);
+        if (httpsBrowsers != null) {
+            for (ResolveInfo b : httpsBrowsers) {
+                if (b.activityInfo != null) browserPackages.add(b.activityInfo.packageName);
             }
         }
 
@@ -258,7 +265,7 @@ public class MainActivity extends Activity {
                 if (info.activityInfo == null) continue;
                     String packageName = info.activityInfo.packageName;
 
-                if (!packageName.equals(getPackageName()) && !browserPackages.contains(packageName)) {
+                if (!packageName.equals(getPackageName()) && !browserPackages.contains(packageName) && !packageName.equals("android") && !packageName.startsWith("com.android.internal")) {
                     validNativePackages.add(packageName);
                 }
             }
