@@ -16,6 +16,8 @@ import javax.net.ssl.X509TrustManager;
 
 public class SslUtils {
 
+    private static List<X509Certificate> javaSecurityCerts = null;
+
     public static X509Certificate getX509Certificate(SslCertificate sslCert) {
         if (sslCert == null) return null;
 
@@ -51,16 +53,40 @@ public class SslUtils {
                     }
                 }
             }
+
+            for (java.security.Provider provider : java.security.Security.getProviders()) {
+                try {
+                    TrustManagerFactory customTmf = TrustManagerFactory.getInstance(defaultAlgorithm, provider);
+                    customTmf.init((KeyStore) null);
+                    for (TrustManager tm : customTmf.getTrustManagers()) {
+                        if (tm instanceof X509TrustManager) {
+                            X509Certificate[] issuers = ((X509TrustManager) tm).getAcceptedIssuers();
+                            if (issuers != null) {
+                                for (X509Certificate cert : issuers) {
+                                    allCerts.add(cert);
+                                }
+                            }
+                        }
+                    }
+                } catch (Exception ignored) {
+                }
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
         return allCerts;
     }
 
+    public static void updateCertsJava(){
+        javaSecurityCerts = getAllJavaTrustedCertificates();
+    }
+
     public static boolean isCertInGlobalJavaTrustStore(X509Certificate cert) {
         if (cert == null) return false;
-        List<X509Certificate> trustedList = getAllJavaTrustedCertificates();
-        for (X509Certificate trusted : trustedList) {
+        if(javaSecurityCerts == null){
+            updateCertsJava();
+        }
+        for (X509Certificate trusted : javaSecurityCerts) {
             if (trusted.equals(cert) || java.util.Arrays.equals(trusted.getSignature(), cert.getSignature())) {
                 return true;
             }
