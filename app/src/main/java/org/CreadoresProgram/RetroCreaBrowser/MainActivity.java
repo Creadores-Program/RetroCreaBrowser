@@ -384,6 +384,11 @@ public class MainActivity extends Activity {
             public void onNothingSelected(AdapterView<?> parent) {}
         });
 
+        TextView tvInput = new TextView(this);
+        tvInput.setText(R.string.url);
+        tvInput.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+        tvInput.setPadding(0, 10, 0, 5);
+
         final EditText input = new EditText(this);
         input.setHint("Escribe una URL o búsqueda...");
         if (webView != null && webView.getUrl() != null) {
@@ -395,6 +400,7 @@ public class MainActivity extends Activity {
         layout.addView(spinnerUserAgents);
         layout.addView(tvEngine);
         layout.addView(spinnerEngines);
+        layout.addView(tvInput);
         layout.addView(input);
 
         builder.setView(layout);
