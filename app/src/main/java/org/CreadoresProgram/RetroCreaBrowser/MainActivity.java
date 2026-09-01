@@ -214,8 +214,8 @@ public class MainActivity extends Activity {
                                 return;
                             }
                             try {
-                                PrivateKey privateKey = KeyChain.getPrivateKey(view.getContext(), alias);
-                                X509Certificate[] chain = KeyChain.getCertificateChain(view.getContext(), alias);
+                                PrivateKey privateKey = KeyChain.getPrivateKey(MainActivity.this, alias);
+                                X509Certificate[] chain = KeyChain.getCertificateChain(MainActivity.this, alias);
                                 request.proceed(privateKey, chain);
                             } catch (Exception e) {
                                 request.cancel();
