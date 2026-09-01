@@ -6,6 +6,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.ComponentCallbacks2;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
@@ -620,11 +621,24 @@ public class MainActivity extends Activity {
         }
     }
     @Override
+    public void onTrimMemory(int level) {
+        super.onTrimMemory(level);
+        if(level >= ComponentCallbacks2.TRIM_MEMORY_MODERATE){
+            uniLowMem();
+        }
+    }
+    @Override
     public void onLowMemory() {
         super.onLowMemory();
+        uniLowMem();
+    }
+
+    private void uniLowMem(){
         if (webView != null) {
-            webView.freeMemory(); 
             webView.clearCache(false);
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                webView.freeMemory();
+            }
         }
     }
     
