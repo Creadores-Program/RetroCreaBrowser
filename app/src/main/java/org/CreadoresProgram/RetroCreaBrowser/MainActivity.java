@@ -205,7 +205,7 @@ public class MainActivity extends Activity {
                     return;
                 }
                 KeyChain.choosePrivateKeyAlias(
-                    view.getContext(),
+                    MainActivity.this,
                     new KeyChainAliasCallback() {
                         @Override
                         public void alias(String alias) {
