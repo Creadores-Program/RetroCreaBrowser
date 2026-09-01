@@ -36,6 +36,7 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.content.res.ColorStateList;
 
 import org.CreadoresProgram.WebViewCREA.WebViewCreaClient;
 import org.CreadoresProgram.RetroCreaBrowser.browserconfig.SetConfigOkClient;
@@ -480,9 +481,17 @@ public class MainActivity extends Activity {
             );
 
             if (progressBar != null) {
-                Drawable progressDrawable = progressBar.getProgressDrawable();
-                if (progressDrawable != null) {
-                    progressDrawable.mutate().setColorFilter(invertedColor, PorterDuff.Mode.SRC_IN);
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+                    applyInvertedColorPBL(invertedColor);
+                }else{
+                    Drawable progressDrawable = progressBar.getProgressDrawable();
+                    if (progressDrawable != null) {
+                        progressDrawable.mutate().setColorFilter(invertedColor, PorterDuff.Mode.SRC_IN);
+                    }
+                    Drawable indeterminateDrawable = progressBar.getIndeterminateDrawable();
+                    if (indeterminateDrawable != null) {
+                        indeterminateDrawable.mutate().setColorFilter(invertedColor, PorterDuff.Mode.SRC_IN);
+                    }
                 }
             }
 
@@ -500,6 +509,10 @@ public class MainActivity extends Activity {
                 }
             }
         } catch(Exception e){}
+    }
+    private void applyInvertedColorPBL(int color){
+        progressBar.setIndeterminateTintList(ColorStateList.valueOf(invertedColor));
+        progressBar.setProgressTintList(ColorStateList.valueOf(invertedColor));
     }
 
     private boolean isColorLight(int color) {
