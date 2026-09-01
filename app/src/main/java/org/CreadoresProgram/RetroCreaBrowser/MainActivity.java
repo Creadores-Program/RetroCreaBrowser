@@ -186,7 +186,12 @@ public class MainActivity extends Activity {
             }
             @Override
             public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
-                X509Certificate x509Cert = SslUtils.getX509Certificate(error.getCertificate());
+                if(SslUtils.isCertInGlobalJavaTrustStore(SslUtils.getX509Certificate(error.getCertificate()))){
+                    handler.proceed();
+                    return;
+                }
+                //request a user
+                handler.cancel();
             }
         };
 
