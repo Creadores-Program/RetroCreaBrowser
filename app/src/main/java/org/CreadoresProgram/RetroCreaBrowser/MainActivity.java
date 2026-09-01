@@ -391,13 +391,6 @@ public class MainActivity extends Activity {
         }
         input.setSelectAllOnFocus(true);
 
-        input.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                input.selectAll();
-            }
-        });
-
         layout.addView(tvUserAgent);
         layout.addView(spinnerUserAgents);
         layout.addView(tvEngine);
