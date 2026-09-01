@@ -10,6 +10,7 @@ import android.content.ComponentCallbacks2;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
+import android.net.http.SslError;
 import android.os.Bundle;
 import android.os.Build;
 import android.graphics.Color;
@@ -27,6 +28,7 @@ import android.webkit.WebChromeClient;
 import android.webkit.CookieManager;
 import android.webkit.WebIconDatabase;
 import android.webkit.WebResourceRequest;
+import android.webkit.SslErrorHandler;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -41,6 +43,7 @@ import android.content.res.ColorStateList;
 
 import org.CreadoresProgram.WebViewCREA.WebViewCreaClient;
 import org.CreadoresProgram.RetroCreaBrowser.browserconfig.SetConfigOkClient;
+import org.CreadoresProgram.RetroCreaBrowser.utils.SslUtils;
 
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -180,6 +183,10 @@ public class MainActivity extends Activity {
                     "}" +
                     "})()";
                 webView.loadUrl(jsScript);
+            }
+            @Override
+            public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
+                X509Certificate x509Cert = SslUtils.getX509Certificate(error.getCertificate());
             }
         };
 
