@@ -6,6 +6,7 @@ import android.os.Bundle;
 import java.io.ByteArrayInputStream;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
+import java.security.PrivateKey;
 import java.security.KeyStore;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -92,5 +93,46 @@ public class SslUtils {
             }
         }
         return false;
+    }
+
+    public static ClientCredentials getClientCredentialsFromProvider(String host, int port) {
+        try {
+            for (java.security.Provider provider : java.security.Security.getProviders()) {
+                try {
+                    KeyStore ks = KeyStore.getInstance("PKCS12", provider);
+                    ks.load(null, null);
+
+                    Enumeration<String> aliases = ks.aliases();
+                    while (aliases.hasMoreElements()) {
+                        String alias = aliases.nextElement();
+                        if (ks.isKeyEntry(alias)) {
+                            PrivateKey key = (PrivateKey) ks.getKey(alias, null);
+                            java.security.cert.Certificate[] chain = ks.getCertificateChain(alias);
+        
+                            if (key != null && chain != null) {
+                                X509Certificate[] x509Chain = new X509Certificate[chain.length];
+                                for (int i = 0; i < chain.length; i++) {
+                                    x509Chain[i] = (X509Certificate) chain[i];
+                                }
+                                return new ClientCredentials(key, x509Chain);
+                            }
+                        }
+                    }
+                } catch (Exception ignored) {}
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static class ClientCredentials {
+        public final PrivateKey privateKey;
+        public final X509Certificate[] certificateChain;
+
+        public ClientCredentials(PrivateKey privateKey, X509Certificate[] certificateChain) {
+            this.privateKey = privateKey;
+            this.certificateChain = certificateChain;
+        }
     }
 }
