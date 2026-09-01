@@ -619,6 +619,14 @@ public class MainActivity extends Activity {
             super.onBackPressed();
         }
     }
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        if (webView != null) {
+            webView.freeMemory(); 
+            webView.clearCache(false);
+        }
+    }
     
     @Override
     public boolean onOptionsItemSelected(android.view.MenuItem item) {
