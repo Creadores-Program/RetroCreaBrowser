@@ -511,8 +511,8 @@ public class MainActivity extends Activity {
         } catch(Exception e){}
     }
     private void applyInvertedColorPBL(int color){
-        progressBar.setIndeterminateTintList(ColorStateList.valueOf(invertedColor));
-        progressBar.setProgressTintList(ColorStateList.valueOf(invertedColor));
+        progressBar.setIndeterminateTintList(ColorStateList.valueOf(color));
+        progressBar.setProgressTintList(ColorStateList.valueOf(color));
     }
 
     private boolean isColorLight(int color) {
