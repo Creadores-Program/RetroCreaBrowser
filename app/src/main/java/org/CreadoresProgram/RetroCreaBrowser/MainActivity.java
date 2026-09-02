@@ -80,9 +80,6 @@ public class MainActivity extends Activity {
             this.actionBar = (RelativeLayout) findViewById(R.id.top_bar_container);
             originalXmlBackground = actionBar.getBackground();
             this.actionBarIcon = (ImageView) findViewById(R.id.top_bar_icon);
-            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) progressBar.getLayoutParams();
-            params.topMargin = (int) (48 * getResources().getDisplayMetrics().density);
-            progressBar.setLayoutParams(params);
             WebIconDatabase.getInstance().open(getDir("icons", MODE_PRIVATE).getPath());
 
             if (this.actionBar != null) {
@@ -214,6 +211,7 @@ public class MainActivity extends Activity {
                     if (newProgress < 100) {
                         if (progressBar.getVisibility() != View.VISIBLE) {
                             progressBar.setVisibility(View.VISIBLE);
+                            progressBar.bringToFront();
                         }
                         progressBar.setProgress(newProgress);
                     } else {
