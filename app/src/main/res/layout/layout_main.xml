@@ -15,7 +15,7 @@
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
         android:layout_height="6dp"
-        android:layout_below="@+id/top_bar_container"
+        android:layout_alignParentTop="true"
         android:background="@android:color/transparent"
         android:indeterminate="false"
         android:max="100"
