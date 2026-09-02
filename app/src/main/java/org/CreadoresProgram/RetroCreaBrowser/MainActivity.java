@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.net.http.SslError;
 import android.os.Bundle;
 import android.os.Build;
+import android.graphics.Rect;
 import android.graphics.Color;
 import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
@@ -536,11 +537,15 @@ public class MainActivity extends Activity {
                 }else{
                     Drawable progressDrawable = progressBar.getProgressDrawable();
                     if (progressDrawable != null) {
+                        Rect bounds = progressDrawable.getBounds();
                         progressDrawable.mutate().setColorFilter(invertedColor, PorterDuff.Mode.SRC_IN);
+                        progressDrawable.setBounds(bounds);
                     }
                     Drawable indeterminateDrawable = progressBar.getIndeterminateDrawable();
                     if (indeterminateDrawable != null) {
+                        Rect bounds = progressDrawable.getBounds();
                         indeterminateDrawable.mutate().setColorFilter(invertedColor, PorterDuff.Mode.SRC_IN);
+                        progressDrawable.setBounds(bounds);
                     }
                 }
             }
