@@ -80,6 +80,9 @@ public class MainActivity extends Activity {
             this.actionBar = (RelativeLayout) findViewById(R.id.top_bar_container);
             originalXmlBackground = actionBar.getBackground();
             this.actionBarIcon = (ImageView) findViewById(R.id.top_bar_icon);
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) progressBar.getLayoutParams();
+            params.topMargin = (int) (48 * getResources().getDisplayMetrics().density);
+            progressBar.setLayoutParams(params);
             WebIconDatabase.getInstance().open(getDir("icons", MODE_PRIVATE).getPath());
 
             if (this.actionBar != null) {
@@ -208,21 +211,16 @@ public class MainActivity extends Activity {
             public void onProgressChanged(WebView view, int newProgress) {
                 super.onProgressChanged(view, newProgress);
                 if (progressBar != null) {
-                    progressBar.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            progressBar.animate().cancel(); 
-                            if (newProgress < 100) {
-                                progressBar.setAlpha(1.0f);
-                                progressBar.setVisibility(View.VISIBLE);
-                                progressBar.setProgress(newProgress);
-                            } else {
-                                progressBar.setProgress(100);
-                                progressBar.setVisibility(View.GONE);
-                                progressBar.setProgress(0);
-                            }
+                    if (newProgress < 100) {
+                        if (progressBar.getVisibility() != View.VISIBLE) {
+                            progressBar.setVisibility(View.VISIBLE);
                         }
-                    });
+                        progressBar.setProgress(newProgress);
+                    } else {
+                        progressBar.setProgress(100);
+                        progressBar.setVisibility(View.GONE);
+                        progressBar.setProgress(0);
+                    }
                 }
             }
             @Override
