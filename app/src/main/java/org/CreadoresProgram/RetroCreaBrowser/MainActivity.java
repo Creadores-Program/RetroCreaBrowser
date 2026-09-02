@@ -212,6 +212,7 @@ public class MainActivity extends Activity {
                         progressBar.setProgress(newProgress);
                         if (progressBar.getVisibility() == View.GONE) {
                             progressBar.setVisibility(View.VISIBLE);
+                            progressBar.bringToFront();
                         }
                     } else {
                         progressBar.setProgress(100);
