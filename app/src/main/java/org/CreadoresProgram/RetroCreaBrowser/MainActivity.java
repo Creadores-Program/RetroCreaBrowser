@@ -208,16 +208,14 @@ public class MainActivity extends Activity {
             public void onProgressChanged(WebView view, int newProgress) {
                 super.onProgressChanged(view, newProgress);
                 if (progressBar != null) {
+                    if (progressBar.getVisibility() == View.GONE) {
+                        progressBar.setVisibility(View.VISIBLE);
+                    }
+                    progressBar.setProgress(newProgress);
                     if (newProgress < 100) {
-                        progressBar.setProgress(newProgress);
-                        if (progressBar.getVisibility() == View.GONE) {
-                            progressBar.setVisibility(View.VISIBLE);
-                            progressBar.bringToFront();
-                            progressBar.postInvalidate();
-                        }
+                        progressBar.setAlpha(1.0f);
                     } else {
-                        progressBar.setProgress(100);
-                        progressBar.setVisibility(View.GONE);
+                        progressBar.setAlpha(0.0f);
                     }
                 }
             }
