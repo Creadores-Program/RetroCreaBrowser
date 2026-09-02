@@ -13,7 +13,6 @@ import android.net.Uri;
 import android.net.http.SslError;
 import android.os.Bundle;
 import android.os.Build;
-import android.graphics.Rect;
 import android.graphics.Color;
 import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
@@ -525,28 +524,9 @@ public class MainActivity extends Activity {
                 parsedColor = Color.parseColor(color);
             }
 
-            int invertedColor = Color.rgb(
-                255 - Color.red(parsedColor),
-                255 - Color.green(parsedColor),
-                255 - Color.blue(parsedColor)
-            );
-
             if (progressBar != null) {
                 if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
                     applyInvertedColorPBL(invertedColor);
-                }else{
-                    Drawable progressDrawable = progressBar.getProgressDrawable();
-                    if (progressDrawable != null) {
-                        Rect bounds = progressDrawable.getBounds();
-                        progressDrawable.mutate().setColorFilter(invertedColor, PorterDuff.Mode.SRC_IN);
-                        progressDrawable.setBounds(bounds);
-                    }
-                    Drawable indeterminateDrawable = progressBar.getIndeterminateDrawable();
-                    if (indeterminateDrawable != null) {
-                        Rect bounds = progressDrawable.getBounds();
-                        indeterminateDrawable.mutate().setColorFilter(invertedColor, PorterDuff.Mode.SRC_IN);
-                        progressDrawable.setBounds(bounds);
-                    }
                 }
             }
 
