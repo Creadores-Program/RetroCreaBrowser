@@ -524,10 +524,13 @@ public class MainActivity extends Activity {
                 parsedColor = Color.parseColor(color);
             }
 
-            if (progressBar != null) {
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
-                    applyInvertedColorPBL(invertedColor);
-                }
+            if (progressBar != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+                int invertedColor = Color.rgb(
+                    255 - Color.red(parsedColor),
+                    255 - Color.green(parsedColor),
+                    255 - Color.blue(parsedColor)
+                );
+                applyInvertedColorPBL(invertedColor);
             }
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
