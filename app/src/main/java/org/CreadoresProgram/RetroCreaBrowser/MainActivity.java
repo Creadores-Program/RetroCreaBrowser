@@ -22,6 +22,9 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.LayerDrawable;
 import android.util.TypedValue;
 import android.view.View;
+import android.security.KeyChain;
+import android.security.KeyChainAliasCallback;
+import android.webkit.ClientCertRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebChromeClient;
@@ -44,7 +47,8 @@ import android.content.res.ColorStateList;
 import org.CreadoresProgram.WebViewCREA.WebViewCreaClient;
 import org.CreadoresProgram.RetroCreaBrowser.browserconfig.SetConfigOkClient;
 import org.CreadoresProgram.RetroCreaBrowser.utils.SslUtils;
-
+import java.security.PrivateKey;
+import java.security.cert.X509Certificate;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
@@ -192,6 +196,38 @@ public class MainActivity extends Activity {
                 }
                 //request a user
                 handler.cancel();
+            }
+            @Override
+            public void onReceivedClientCertRequest(WebView view, final ClientCertRequest request) {
+                SslUtils.ClientCredentials credentials = SslUtils.getClientCredentialsFromProvider(request.getHost(), request.getPort());
+                if (credentials != null) {
+                    request.proceed(credentials.privateKey, credentials.certificateChain);
+                    return;
+                }
+                KeyChain.choosePrivateKeyAlias(
+                    MainActivity.this,
+                    new KeyChainAliasCallback() {
+                        @Override
+                        public void alias(String alias) {
+                            if (alias == null) {
+                                request.cancel();
+                                return;
+                            }
+                            try {
+                                PrivateKey privateKey = KeyChain.getPrivateKey(MainActivity.this, alias);
+                                X509Certificate[] chain = KeyChain.getCertificateChain(MainActivity.this, alias);
+                                request.proceed(privateKey, chain);
+                            } catch (Exception e) {
+                                request.cancel();
+                            }
+                        }
+                    },
+                    request.getKeyTypes(),
+                    request.getPrincipals(),
+                    request.getHost(),
+                    request.getPort(),
+                    null
+                );
             }
         };
 
