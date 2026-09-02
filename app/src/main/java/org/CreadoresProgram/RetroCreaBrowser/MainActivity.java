@@ -105,34 +105,6 @@ public class MainActivity extends Activity {
             this.originalStatusBarTheme = getWindow().getStatusBarColor();
         }
 
-        webView.setWebChromeClient(new WebChromeClient(){
-            @Override
-            public void onProgressChanged(WebView view, int newProgress) {
-                super.onProgressChanged(view, newProgress);
-                if (progressBar != null) {
-                    if (newProgress < 100) {
-                        if (progressBar.getVisibility() == View.INVISIBLE) {
-                            progressBar.setVisibility(View.VISIBLE);
-                        }
-                        progressBar.setProgress(newProgress);
-                    } else {
-                        progressBar.setProgress(100);
-                        progressBar.setVisibility(View.INVISIBLE);
-                    }
-                }
-            }
-            @Override
-            public void onReceivedTitle(WebView view, String title) {
-                super.onReceivedTitle(view, title);
-                updateTitle(title);
-            }
-            @Override
-            public void onReceivedIcon(WebView view, Bitmap icon) {
-                super.onReceivedIcon(view, icon);
-                updateIcon(icon);
-            }
-        });
-
         this.creaClient = new WebViewCreaClient(){
             @SuppressWarnings("deprecation")
             @Override
@@ -230,6 +202,34 @@ public class MainActivity extends Activity {
                 );
             }
         };
+
+        creaClient.setWebChromeClient(webView, new WebChromeClient(){
+            @Override
+            public void onProgressChanged(WebView view, int newProgress) {
+                super.onProgressChanged(view, newProgress);
+                if (progressBar != null) {
+                    if (newProgress < 100) {
+                        if (progressBar.getVisibility() == View.INVISIBLE) {
+                            progressBar.setVisibility(View.VISIBLE);
+                        }
+                        progressBar.setProgress(newProgress);
+                    } else {
+                        progressBar.setProgress(100);
+                        progressBar.setVisibility(View.INVISIBLE);
+                    }
+                }
+            }
+            @Override
+            public void onReceivedTitle(WebView view, String title) {
+                super.onReceivedTitle(view, title);
+                updateTitle(title);
+            }
+            @Override
+            public void onReceivedIcon(WebView view, Bitmap icon) {
+                super.onReceivedIcon(view, icon);
+                updateIcon(icon);
+            }
+        });
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD){
             SetConfigOkClient.configOkClient(creaClient.getNetClient(), this);
