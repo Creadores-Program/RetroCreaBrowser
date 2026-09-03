@@ -39,5 +39,7 @@
                 <data android:scheme="https" />
             </intent-filter>
         </activity>
+        <activity android:name=".TabsActivity"
+            android:launchMode="singleTask" android:label="@string/tabs" android:exported="false" android:configChanges="orientation|screenSize|keyboardHidden|screenLayout"></activity>
     </application>
 </manifest>
