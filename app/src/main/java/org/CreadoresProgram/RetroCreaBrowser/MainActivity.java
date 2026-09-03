@@ -581,6 +581,14 @@ public class MainActivity extends Activity {
             actionBarTitle.setText(title);
         }
     }
+    public String getTitle(){
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB){
+            return getActionBarTitle();
+        }else if(actionBarTitle != null){
+            return actionBarTitle.getText().toString();
+        }
+        return null;
+    }
 
     private void updateIcon(Bitmap icon){
         if(icon == null){
@@ -605,6 +613,14 @@ public class MainActivity extends Activity {
         if(actionBar != null){
             actionBar.setIcon(new BitmapDrawable(getResources(), icon));
         }
+    }
+
+    private String getActionBarTitle(){
+        ActionBar actionBar = getActionBar();
+        if (actionBar != null && actionBar.getTitle() != null) {
+            return actionBar.getTitle().toString();
+        }
+        return null;
     }
 
     @Override
