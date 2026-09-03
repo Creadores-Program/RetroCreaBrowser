@@ -45,6 +45,7 @@ import android.widget.TextView;
 import android.content.res.ColorStateList;
 
 import org.CreadoresProgram.WebViewCREA.WebViewCreaClient;
+import org.CreadoresProgram.RetroCreaBrowser.RetroCreaBrowserApp;
 import org.CreadoresProgram.RetroCreaBrowser.browserconfig.SetConfigOkClient;
 import org.CreadoresProgram.RetroCreaBrowser.utils.*;
 import java.security.PrivateKey;
@@ -258,6 +259,7 @@ public class MainActivity extends Activity {
             }
         }
         creaClient.loadUrl(webView, "https://lite.duckduckgo.com/lite/");
+        ((RetroCreaBrowserApp) getApplication()).addTab(this);
     }
 
     private boolean openInExternalAppIfPossible(String url) {
@@ -684,6 +686,7 @@ public class MainActivity extends Activity {
 
     @Override
     protected void onDestroy() {
+        ((RetroCreaBrowserApp) getApplication()).removeTab(this);
         if (webView != null) {
             webView.post(new Runnable(){
                 @Override
