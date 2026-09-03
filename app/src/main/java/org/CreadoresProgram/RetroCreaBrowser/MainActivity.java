@@ -67,6 +67,7 @@ public class MainActivity extends Activity {
     private int originalStatusBarTheme;
 
     private static final String SCHEME_COLOR_PREFIX = "app-color://";
+    private String colorExt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -74,6 +75,7 @@ public class MainActivity extends Activity {
         setContentView(R.layout.layout_main);
         this.webView = (WebView) findViewById(R.id.webview);
         this.progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        this.colorExt = "javascript:" + AssetUtils.readAssetAsString(getAssets(), "colorExt.js");
         
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD){
             this.actionBarTitle = (TextView) findViewById(R.id.top_bar_title);
@@ -141,30 +143,7 @@ public class MainActivity extends Activity {
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
-                String jsScript = "javascript:(function() {" +
-                    "try {" +
-                    "   var color = '';" +
-                    "   var meta = document.querySelector('meta[name=\"theme-color\"]');" +
-                    "   if (meta && meta.content) {" +
-                    "       color = meta.content;" +
-                    "   } else if (document.body) {" +
-                    "       var style = document.defaultView ? document.defaultView.getComputedStyle(document.body, null) : null;" +
-                    "       if (style && style.backgroundColor) {" +
-                    "           color = style.backgroundColor;" +
-                    "       } else if (document.body.style && document.body.style.backgroundColor) {" +
-                    "           color = document.body.style.backgroundColor;" +
-                    "       }" +
-                    "   }" +
-                    "   if (color && color !== 'rgba(0, 0, 0, 0)' && color !== 'transparent') {" +
-                    "       window.location.href = '" + SCHEME_COLOR_PREFIX + "' + encodeURIComponent(color);" +
-                    "   } else {" +
-                    "       window.location.href = '" + SCHEME_COLOR_PREFIX + "default';" +
-                    "   }" +
-                    "} catch(e) {" +
-                    "   window.location.href = '" + SCHEME_COLOR_PREFIX + "default';" +
-                    "}" +
-                    "})()";
-                webView.loadUrl(jsScript);
+                webView.loadUrl(colorExt);
                 progressBar.setVisibility(View.GONE);
             }
             @Override
