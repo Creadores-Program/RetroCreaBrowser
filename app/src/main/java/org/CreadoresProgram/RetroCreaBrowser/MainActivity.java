@@ -581,7 +581,7 @@ public class MainActivity extends Activity {
             actionBarTitle.setText(title);
         }
     }
-    public String getTitle(){
+    public String getTitleBar(){
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB){
             return getActionBarTitle();
         }else if(actionBarTitle != null){
