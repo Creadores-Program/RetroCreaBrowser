@@ -6,6 +6,11 @@ android {
     namespace 'org.CreadoresProgram.RetroCreaBrowser'
     compileSdk 25
 
+    lintOptions {
+        abortOnError true
+        error 'UnusedImports'
+    }
+
     defaultConfig {
         applicationId 'org.CreadoresProgram.RetroCreaBrowser'
         targetSdk 25
