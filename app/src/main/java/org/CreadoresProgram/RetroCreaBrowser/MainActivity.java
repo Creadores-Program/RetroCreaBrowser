@@ -67,8 +67,6 @@ public class MainActivity extends Activity {
     private int originalStatusBarTheme;
 
     private static final String SCHEME_COLOR_PREFIX = "app-color://";
-    private static final String EXTRA_IS_INCOGNITO = "extra_is_incognito";
-    private boolean isIncognito = false;
     private String colorExt;
 
     @Override
@@ -605,13 +603,6 @@ public class MainActivity extends Activity {
         if(actionBar != null){
             actionBar.setIcon(new BitmapDrawable(getResources(), icon));
         }
-    }
-
-    private void openNewWindow(boolean launchInIncognito) {
-        Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra(EXTRA_IS_INCOGNITO, launchInIncognito);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
     }
 
     @Override
