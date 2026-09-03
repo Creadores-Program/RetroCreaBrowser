@@ -75,7 +75,7 @@ public class MainActivity extends Activity {
         setContentView(R.layout.layout_main);
         this.webView = (WebView) findViewById(R.id.webview);
         this.progressBar = (ProgressBar) findViewById(R.id.progressBar);
-        this.colorExt = "javascript:" + AssetUtils.readAssetAsString(getAssets(), "colorExt.js");
+        this.colorExt = AssetUtils.readAssetAsString(getAssets(), "colorExt.js");
         
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD){
             this.actionBarTitle = (TextView) findViewById(R.id.top_bar_title);
@@ -143,7 +143,7 @@ public class MainActivity extends Activity {
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
-                webView.loadUrl(colorExt);
+                WebViewUtils.evaluateJS(webView, colorExt);
                 progressBar.setVisibility(View.GONE);
             }
             @Override
