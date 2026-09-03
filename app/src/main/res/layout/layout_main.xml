@@ -16,7 +16,6 @@
         android:layout_width="match_parent"
         android:layout_height="6dp"
         android:layout_alignTop="@+id/webview"
-        android:background="@android:color/transparent"
         android:indeterminate="false"
         android:max="100"
         android:visibility="gone" />
