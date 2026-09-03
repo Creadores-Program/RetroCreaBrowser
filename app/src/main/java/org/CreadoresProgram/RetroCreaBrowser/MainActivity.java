@@ -133,6 +133,12 @@ public class MainActivity extends Activity {
             }
 
             @Override
+            public void onPageStarted(WebView view, String url, Bitmap favicon){
+                progressBar.setVisibility(View.VISIBLE);
+                progressBar.bringToFront();
+            }
+
+            @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
                 String jsScript = "javascript:(function() {" +
@@ -159,6 +165,7 @@ public class MainActivity extends Activity {
                     "}" +
                     "})()";
                 webView.loadUrl(jsScript);
+                progressBar.setVisibility(View.GONE);
             }
             @Override
             public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
@@ -204,23 +211,6 @@ public class MainActivity extends Activity {
         };
 
         creaClient.setWebChromeClient(webView, new WebChromeClient(){
-            @Override
-            public void onProgressChanged(WebView view, int newProgress) {
-                super.onProgressChanged(view, newProgress);
-                if (progressBar != null) {
-                    if (newProgress < 100) {
-                        if (progressBar.getVisibility() != View.VISIBLE) {
-                            progressBar.setVisibility(View.VISIBLE);
-                            progressBar.bringToFront();
-                        }
-                        progressBar.setProgress(newProgress);
-                    } else {
-                        progressBar.setProgress(100);
-                        progressBar.setVisibility(View.GONE);
-                        progressBar.setProgress(0);
-                    }
-                }
-            }
             @Override
             public void onReceivedTitle(WebView view, String title) {
                 super.onReceivedTitle(view, title);
@@ -524,15 +514,6 @@ public class MainActivity extends Activity {
                 parsedColor = Color.parseColor(color);
             }
 
-            if (progressBar != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
-                int invertedColor = Color.rgb(
-                    255 - Color.red(parsedColor),
-                    255 - Color.green(parsedColor),
-                    255 - Color.blue(parsedColor)
-                );
-                applyInvertedColorPBL(invertedColor);
-            }
-
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
                 setColorActionBar(parsedColor);
                 if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
@@ -547,10 +528,6 @@ public class MainActivity extends Activity {
                 }
             }
         } catch(Exception e){}
-    }
-    private void applyInvertedColorPBL(int color){
-        progressBar.setIndeterminateTintList(ColorStateList.valueOf(color));
-        progressBar.setProgressTintList(ColorStateList.valueOf(color));
     }
 
     private boolean isColorLight(int color) {
