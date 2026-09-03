@@ -1,5 +1,6 @@
 package org.CreadoresProgram.RetroCreaBrowser.utils;
 
+import android.os.Build;
 import android.content.res.AssetManager;
 
 import java.io.IOException;
@@ -20,9 +21,6 @@ public class AssetUtils{
     private static class KitkatHelper{
         static Charset getUTF8(){
             return StandardCharsets.UTF_8;
-        }
-        static void evaluateJS(WebView webview, String code){
-            webview.evaluateJavascript(code, null);
         }
     }
 
