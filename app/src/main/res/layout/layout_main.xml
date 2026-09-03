@@ -12,11 +12,9 @@
         android:layout_below="@+id/top_bar_container" />
     <ProgressBar
         android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="match_parent"
-        android:layout_height="6dp"
-        android:layout_alignTop="@+id/webview"
-        android:indeterminate="false"
-        android:max="100"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
         android:visibility="gone" />
 </RelativeLayout>
