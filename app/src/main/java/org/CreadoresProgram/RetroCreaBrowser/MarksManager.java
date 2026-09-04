@@ -22,7 +22,7 @@ public class MarksManager {
     public static List<Mark> getMarks(Context context) {
         SharedPreferences prefs = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         String rawData = prefs.getString(KEY_BOOKMARKS, null);
-        List<Mark> list = new ArrayList<Bookmark>();
+        List<Mark> list = new ArrayList<Mark>();
 
         if (rawData != null && rawData.trim().length() > 0) {
             String[] items = rawData.split(";");
@@ -49,7 +49,7 @@ public class MarksManager {
     }
 
     public static void addMark(Context context, Mark bookmark) {
-        List<Mark> list = getBookmarks(context);
+        List<Mark> list = getMarks(context);
         list.add(bookmark);
         saveMarks(context, list);
     }
