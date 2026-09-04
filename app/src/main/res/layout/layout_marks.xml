@@ -3,7 +3,9 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical">
-
+    <include
+        android:id="@+id/top_bar_container"
+        layout="@layout/top_bar" />
     <ListView
         android:id="@+id/listViewMarks"
         android:layout_width="fill_parent"
