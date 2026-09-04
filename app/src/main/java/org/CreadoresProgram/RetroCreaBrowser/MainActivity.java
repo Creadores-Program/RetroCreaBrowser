@@ -655,9 +655,9 @@ public class MainActivity extends Activity {
             }
         }
     }
-
+    
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(Menu menu) {
         menu.add(Menu.NONE, MENU_TABS, Menu.NONE, R.string.tabs);
         return super.onCreateOptionsMenu(menu);
     }
