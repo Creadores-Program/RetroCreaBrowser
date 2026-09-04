@@ -42,23 +42,22 @@ public class TabsActivity extends Activity {
         containerList.removeAllViews();
         LayoutInflater inflater = LayoutInflater.from(this);
         List<MainActivity> tabs = ((RetroCreaBrowserApp) getApplication()).getTabs();
-        for(MainActivity tab : tabs){
-            final MainActivity tabF = tab;
+        for(final MainActivity tab : tabs){
             final View tabV = inflater.inflate(R.layout.tab_bar, containerList, false);
             TextView tvTitle = (TextView) tabV.findViewById(R.id.tvTitle);
             final TextView btnClose = (TextView) tabV.findViewById(R.id.btnClose);
-            tvTitle.setText(tabF.getTitleBar());
+            tvTitle.setText(tab.getTitleBar());
             tabV.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(tabF == null || tabF.isFinishing() || tabF.isDestroyed()){
+                    if(tabF == null || tab.isFinishing()){
                         ViewGroup parent = (ViewGroup) tabV.getParent();
                         if (parent != null) {
                             parent.removeView(tabV);
                         }
                         return;
                     }
-                    Intent intent = new Intent(tabF, MainActivity.class);
+                    Intent intent = new Intent(tab, MainActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                     tabF.startActivity(intent);
                     finish();
@@ -67,7 +66,7 @@ public class TabsActivity extends Activity {
             btnClose.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    tabF.finish();
+                    tab.finish();
                     ViewGroup parent = (ViewGroup) tabV.getParent();
                     if (parent != null) {
                         parent.removeView(tabV);
