@@ -5,6 +5,22 @@
     <include
         android:id="@+id/top_bar_container"
         layout="@layout/top_bar" />
+    <LinearLayout
+        android:id="@+id/bar_actions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/top_bar_container"
+        android:gravity="right|center_vertical"
+        android:padding="8dp">
+
+        <ImageButton
+            android:id="@+id/createTab"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/create_tab"
+            android:src="@android:drawable/ic_input_add" />
+    </LinearLayout>
     <ScrollView 
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -15,14 +31,4 @@
             android:layout_height="wrap_content"
             android:orientation="vertical" />
     </ScrollView>
-    <ImageButton
-        android:id="@+id/createTab"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_below="@id/top_bar_container"
-        android:layout_alignParentEnd="true"
-        android:layout_margin="8dp"
-        android:background="@android:color/transparent"
-        android:contentDescription="@string/create_tab"
-        android:src="@android:drawable/ic_input_add" />
 </RelativeLayout>
