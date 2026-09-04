@@ -355,7 +355,7 @@ public class MainActivity extends Activity {
         layout.setPadding(30, 20, 30, 10);
 
         TextView tvEngine = new TextView(this);
-        tvEngine.setText("Motor de búsqueda:");
+        tvEngine.setText(R.string.engine_search);
         tvEngine.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
         tvEngine.setPadding(0, 15, 0, 5);
         final List<SearchEngineManager.Engine> engines = SearchEngineManager.getEngines(this);
@@ -386,7 +386,7 @@ public class MainActivity extends Activity {
         });
 
         TextView tvUserAgent = new TextView(this);
-        tvUserAgent.setText("Agente de Usuario:");
+        tvUserAgent.setText(R.string.user_agent);
         tvUserAgent.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
         tvUserAgent.setPadding(0, 10, 0, 5);
         final List<UserAgentManager.UserAgentItem> userAgents = UserAgentManager.getUserAgents();
@@ -413,7 +413,7 @@ public class MainActivity extends Activity {
         tvInput.setPadding(0, 10, 0, 5);
 
         final EditText input = new EditText(this);
-        input.setHint("Escribe una URL o búsqueda...");
+        input.setHint(R.string.write_url);
         if (webView != null && webView.getUrl() != null) {
             input.setText(webView.getUrl());
         }
@@ -433,9 +433,7 @@ public class MainActivity extends Activity {
             public void onClick(DialogInterface dialog, int which) {
                 String query = input.getText().toString().trim();
                 if (query.length() > 0) {
-                    if (query.startsWith("http://") || query.startsWith("https://")) {
-                        creaClient.loadUrl(webView, query);
-                    } else if(query.startsWith("javascript:")){
+                    if (query.startsWith("http://") || query.startsWith("https://") || query.startsWith("javascript:")) {
                         creaClient.loadUrl(webView, query);
                     } else{
                         if(openInExternalAppIfPossible(query)){
@@ -454,7 +452,7 @@ public class MainActivity extends Activity {
             }
         });
 
-        builder.setNeutralButton("Recargar", new DialogInterface.OnClickListener() {
+        builder.setNeutralButton(R.string.reload, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 creaClient.reload(webView);
@@ -668,8 +666,8 @@ public class MainActivity extends Activity {
             showSearchDialog();
             return true;
         }else if(id == MENU_MARKS){
-            //Intent intent = new Intent(this, MarksActivity.class);
-            //startActivity(intent);
+            Intent intent = new Intent(this, MarksActivity.class);
+            startActivity(intent);
             return true;
         }
         return super.onOptionsItemSelected(item);
