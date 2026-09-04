@@ -45,6 +45,7 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Button;
 import android.content.res.ColorStateList;
 
 import org.CreadoresProgram.WebViewCREA.WebViewCreaClient;
@@ -70,8 +71,10 @@ public class MainActivity extends Activity {
     private int originalStatusBarTheme;
 
     private static final String SCHEME_COLOR_PREFIX = "app-color://";
-    private static final int MENU_SHARE = 1001;
+    private static final String SCHEME_MARKS_PREFIX = "marks://";
+    private static final int MENU_CONFIG = 1001;
     private static final int MENU_MARKS = 1002;
+    private static final int MENU_EXTS = 1003;//extensions JS
     private String colorExt;
 
     @Override
@@ -119,6 +122,11 @@ public class MainActivity extends Activity {
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 if (url != null && url.startsWith(SCHEME_COLOR_PREFIX)) {
                     applyDynamicColor(url.substring(SCHEME_COLOR_PREFIX.length()));
+                    return true;
+                }
+                if(url != null && url.startsWith(SCHEME_MARKS_PREFIX)){
+                    Intent intent = new Intent(this, MarksActivity.class);
+                    startActivity(intent);
                     return true;
                 }
                 if (openInExternalAppIfPossible(url)) {
@@ -421,12 +429,22 @@ public class MainActivity extends Activity {
         }
         input.setSelectAllOnFocus(true);
 
+        Button shareBtn = new Button(this);
+        shareBtn.setText(R.string.share);
+        shareBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shareUrl(webView.getTitle(), webView.getUrl());
+            }
+        });
+
         layout.addView(tvUserAgent);
         layout.addView(spinnerUserAgents);
         layout.addView(tvEngine);
         layout.addView(spinnerEngines);
         layout.addView(tvInput);
         layout.addView(input);
+        layout.addView(shareBtn);
 
         builder.setView(layout);
 
@@ -658,8 +676,9 @@ public class MainActivity extends Activity {
     
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        menu.add(Menu.NONE, MENU_SHARE, Menu.NONE, R.string.share);
+        //menu.add(Menu.NONE, MENU_CONFIG, Menu.NONE, R.string.config);
         menu.add(Menu.NONE, MENU_MARKS, Menu.NONE, R.string.marks);
+        //menu.add(Menu.NONE, MENU_EXTS, Menu.NONE, R.string.exts);
         return super.onCreateOptionsMenu(menu);
     }
     
@@ -673,8 +692,6 @@ public class MainActivity extends Activity {
             Intent intent = new Intent(this, MarksActivity.class);
             startActivity(intent);
             return true;
-        }else if(id == MENU_SHARE){
-            shareUrl(webView.getTitle(), webView.getUrl());
         }
         return super.onOptionsItemSelected(item);
     }
