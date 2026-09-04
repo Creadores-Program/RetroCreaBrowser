@@ -9,4 +9,7 @@
     <string name="ua_local">[Local] %1$s</string>
     <string name="ua_remote">[Remoto] %1$s</string>
     <string name="write_url">Escribe una URL o búsqueda...</string>
+    <string name="exit">Salir</string>
+    <string name="config">Ajustes</string>
+    <string name="exts">Extensiones</string>
 </resources>
