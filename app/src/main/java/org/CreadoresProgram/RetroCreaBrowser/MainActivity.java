@@ -69,7 +69,7 @@ public class MainActivity extends Activity {
     private int originalStatusBarTheme;
 
     private static final String SCHEME_COLOR_PREFIX = "app-color://";
-    private static final int MENU_TABS = 1001;
+    private static final int MENU_MARKS = 1001;
     private String colorExt;
 
     @Override
@@ -657,7 +657,7 @@ public class MainActivity extends Activity {
     
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        menu.add(Menu.NONE, MENU_TABS, Menu.NONE, R.string.tabs);
+        menu.add(Menu.NONE, MENU_MARKS, Menu.NONE, R.string.marks);
         return super.onCreateOptionsMenu(menu);
     }
     
@@ -667,9 +667,9 @@ public class MainActivity extends Activity {
         if (id == android.R.id.home) {
             showSearchDialog();
             return true;
-        }else if(id == MENU_TABS){
-            Intent intent = new Intent(this, TabsActivity.class);
-            startActivity(intent);
+        }else if(id == MENU_MARKS){
+            //Intent intent = new Intent(this, MarksActivity.class);
+            //startActivity(intent);
             return true;
         }
         return super.onOptionsItemSelected(item);
