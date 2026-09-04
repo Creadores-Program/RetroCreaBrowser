@@ -1,4 +1,9 @@
 <resources>
     <string name="marks">Marcadores</string>
-    <string name="create_mark">Crear Marcador</string>
+    <string name="mark">Marcador</string>
+    <string name="del_mark">Marcador eliminado</string>
+    <string name="reload">Recargar</string>
+    <string name="engine_search">Motor de Búsqueda:</string>
+    <string name="user_agent">Agente de Usuario:</string>
+    <string name="write_url">Escribe una URL o búsqueda...</string>
 </resources>
