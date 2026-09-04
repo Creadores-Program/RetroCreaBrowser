@@ -5,5 +5,7 @@
     <string name="reload">Recargar</string>
     <string name="engine_search">Motor de Búsqueda:</string>
     <string name="user_agent">Agente de Usuario:</string>
+    <string name="ua_local">[Local] %1$s</string>
+    <string name="ua_remote">[Remoto] %1$s</string>
     <string name="write_url">Escribe una URL o búsqueda...</string>
 </resources>
