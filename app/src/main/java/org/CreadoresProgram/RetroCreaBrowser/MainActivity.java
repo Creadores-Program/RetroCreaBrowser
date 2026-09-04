@@ -22,6 +22,8 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.LayerDrawable;
 import android.util.TypedValue;
 import android.view.View;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.security.KeyChain;
 import android.security.KeyChainAliasCallback;
 import android.webkit.ClientCertRequest;
@@ -68,6 +70,7 @@ public class MainActivity extends Activity {
     private int originalStatusBarTheme;
 
     private static final String SCHEME_COLOR_PREFIX = "app-color://";
+    private static final int MENU_TABS = 1001;
     private String colorExt;
 
     @Override
@@ -652,11 +655,22 @@ public class MainActivity extends Activity {
             }
         }
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        menu.add(Menu.NONE, MENU_TABS, Menu.NONE, R.string.tabs);
+        return super.onCreateOptionsMenu(menu);
+    }
     
     @Override
-    public boolean onOptionsItemSelected(android.view.MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
             showSearchDialog();
+            return true;
+        }else if(id == MENU_TABS){
+            Intent intent = new Intent(this, TabsActivity.class);
+            startActivity(intent);
             return true;
         }
         return super.onOptionsItemSelected(item);
