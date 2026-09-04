@@ -50,7 +50,7 @@ public class TabsActivity extends Activity {
             tabV.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(tabF == null || tab.isFinishing()){
+                    if(tab == null || tab.isFinishing()){
                         ViewGroup parent = (ViewGroup) tabV.getParent();
                         if (parent != null) {
                             parent.removeView(tabV);
@@ -59,7 +59,7 @@ public class TabsActivity extends Activity {
                     }
                     Intent intent = new Intent(tab, MainActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                    tabF.startActivity(intent);
+                    tab.startActivity(intent);
                     finish();
                 }
             });
