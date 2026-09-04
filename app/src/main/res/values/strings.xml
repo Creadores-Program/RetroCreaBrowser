@@ -1,4 +1,4 @@
 <resources>
-    <string name="tabs">Pestañas</string>
-    <string name="create_tab">Abrir Pestaña</string>
+    <string name="marks">Marcadores</string>
+    <string name="create_mark">Crear Marcador</string>
 </resources>
