@@ -7,7 +7,7 @@
         android:id="@+id/top_bar_container"
         layout="@layout/top_bar" />
     <ListView
-        android:id="@+id/listViewBookmarks"
+        android:id="@+id/listViewMarks"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 </LinearLayout>
