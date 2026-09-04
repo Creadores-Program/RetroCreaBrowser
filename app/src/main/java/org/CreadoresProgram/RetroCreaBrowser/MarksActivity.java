@@ -49,7 +49,7 @@ public class MarksActivity extends Activity {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 MarksManager.removeMark(MarksActivity.this, position);
-                Toast.makeText(MarksActivity.this, "Marcador eliminado", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MarksActivity.this, R.string.del_mark, Toast.LENGTH_SHORT).show();
                 loadMarks();
                 return true;
             }
