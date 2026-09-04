@@ -20,6 +20,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.LayerDrawable;
+import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.Menu;
@@ -69,7 +70,8 @@ public class MainActivity extends Activity {
     private int originalStatusBarTheme;
 
     private static final String SCHEME_COLOR_PREFIX = "app-color://";
-    private static final int MENU_MARKS = 1001;
+    private static final int MENU_SHARE = 1001;
+    private static final int MENU_MARKS = 1002;
     private String colorExt;
 
     @Override
@@ -581,14 +583,6 @@ public class MainActivity extends Activity {
             actionBarTitle.setText(title);
         }
     }
-    public String getTitleBar(){
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB){
-            return getActionBarTitle();
-        }else if(actionBarTitle != null){
-            return actionBarTitle.getText().toString();
-        }
-        return null;
-    }
 
     private void updateIcon(Bitmap icon){
         if(icon == null){
@@ -615,12 +609,21 @@ public class MainActivity extends Activity {
         }
     }
 
-    private String getActionBarTitle(){
-        ActionBar actionBar = getActionBar();
-        if (actionBar != null && actionBar.getTitle() != null) {
-            return actionBar.getTitle().toString();
+    @SuppressWarnings("deprecation")
+    private void shareUrl(String title, String url){
+        Intent sendIntent = new Intent(Intent.ACTION_SEND);
+        sendIntent.setType("text/plain");
+        sendIntent.putExtra(Intent.EXTRA_TEXT, url);
+        if (title != null && !TextUtils.isEmpty(title)) {
+            sendIntent.putExtra(Intent.EXTRA_SUBJECT, title);
         }
-        return null;
+        Intent chooserIntent = Intent.createChooser(sendIntent, null);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            chooserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
+        } else {
+            chooserIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+        }
+        startActivity(chooserIntent);
     }
 
     @Override
@@ -655,6 +658,7 @@ public class MainActivity extends Activity {
     
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        menu.add(Menu.NONE, MENU_SHARE, Menu.NONE, R.string.share);
         menu.add(Menu.NONE, MENU_MARKS, Menu.NONE, R.string.marks);
         return super.onCreateOptionsMenu(menu);
     }
@@ -669,6 +673,8 @@ public class MainActivity extends Activity {
             Intent intent = new Intent(this, MarksActivity.class);
             startActivity(intent);
             return true;
+        }else if(id == MENU_SHARE){
+            shareUrl(webView.getTitle(), webView.getUrl());
         }
         return super.onOptionsItemSelected(item);
     }
