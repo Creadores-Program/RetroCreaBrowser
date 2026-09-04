@@ -12,7 +12,7 @@
         android:layout_below="@id/top_bar_container"
         android:layout_alignParentEnd="true"
         android:layout_margin="8dp"
-        android:background="?android:attr/selectableItemBackgroundBorderless"
+        android:background="@android:color/transparent"
         android:contentDescription="@string/create_tab"
         android:src="@android:drawable/ic_input_add" />
     <ScrollView 
