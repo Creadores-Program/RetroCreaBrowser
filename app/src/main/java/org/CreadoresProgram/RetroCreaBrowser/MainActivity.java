@@ -86,6 +86,7 @@ public class MainActivity extends Activity {
             this.actionBar = (RelativeLayout) findViewById(R.id.top_bar_container);
             originalXmlBackground = actionBar.getBackground();
             this.actionBarIcon = (ImageView) findViewById(R.id.top_bar_icon);
+            actionBarIcon.setImageResource(R.mipmap.ic_launcher);
             WebIconDatabase.getInstance().open(getDir("icons", MODE_PRIVATE).getPath());
 
             if (this.actionBar != null) {
