@@ -57,7 +57,7 @@ public class UserAgentManager {
         }
     }
 
-    public static List<UserAgentItem> getUserAgents() {
+    public static List<UserAgentItem> getUserAgents(Context context) {
         List<UserAgentItem> list = new ArrayList<UserAgentItem>();
 
         for (WebViewCreaClient.LocalUserAgents l : WebViewCreaClient.LocalUserAgents.values()) {
@@ -83,7 +83,7 @@ public class UserAgentManager {
 
     public static void applySelectedUserAgent(Context context, WebView webView, WebViewCreaClient creaClient) {
         if (webView == null) return;
-        List<UserAgentItem> list = getUserAgents();
+        List<UserAgentItem> list = getUserAgents(context);
         int index = getSelectedUserAgentIndex(context);
         if (index >= 0 && index < list.size()) {
             UserAgentItem item = list.get(index);
@@ -96,7 +96,7 @@ public class UserAgentManager {
     }
 
     public static void applyUserAgentAtIndex(Context context, WebView webView, WebViewCreaClient creaClient, int index) {
-        List<UserAgentItem> list = getUserAgents();
+        List<UserAgentItem> list = getUserAgents(context);
         if (index >= 0 && index < list.size()) {
             setSelectedUserAgentIndex(context, index);
             UserAgentItem item = list.get(index);
