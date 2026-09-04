@@ -61,11 +61,11 @@ public class UserAgentManager {
         List<UserAgentItem> list = new ArrayList<UserAgentItem>();
 
         for (WebViewCreaClient.LocalUserAgents l : WebViewCreaClient.LocalUserAgents.values()) {
-            list.add(new UserAgentItem("[Local] " + l.name(), l));
+            list.add(new UserAgentItem(context.getString(R.string.ua_local, l.name()), l));
         }
 
         for (WebViewCreaClient.RemoteUserAgentsIds r : WebViewCreaClient.RemoteUserAgentsIds.values()) {
-            list.add(new UserAgentItem("[Remoto] " + r.name(), r));
+            list.add(new UserAgentItem(context.getString(R.string.ua_remote, r.name()), r));
         }
 
         return list;
