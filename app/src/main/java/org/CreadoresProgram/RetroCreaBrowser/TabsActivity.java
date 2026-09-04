@@ -32,7 +32,7 @@ public class TabsActivity extends Activity {
         createTabBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(this, MainActivity.class);
+                Intent intent = new Intent(TabsActivity.this, MainActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
                 finish();
