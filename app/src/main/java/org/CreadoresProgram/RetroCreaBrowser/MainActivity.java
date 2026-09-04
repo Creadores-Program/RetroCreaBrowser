@@ -125,7 +125,7 @@ public class MainActivity extends Activity {
                     return true;
                 }
                 if(url != null && url.startsWith(SCHEME_MARKS_PREFIX)){
-                    Intent intent = new Intent(this, MarksActivity.class);
+                    Intent intent = new Intent(MainActivity.this, MarksActivity.class);
                     startActivity(intent);
                     return true;
                 }
@@ -140,6 +140,11 @@ public class MainActivity extends Activity {
                 String url = request.getUrl().toString();
                 if (url != null && url.startsWith(SCHEME_COLOR_PREFIX)) {
                     applyDynamicColor(url.substring(SCHEME_COLOR_PREFIX.length()));
+                    return true;
+                }
+                if(url != null && url.startsWith(SCHEME_MARKS_PREFIX)){
+                    Intent intent = new Intent(MainActivity.this, MarksActivity.class);
+                    startActivity(intent);
                     return true;
                 }
                 if (openInExternalAppIfPossible(url)) {
