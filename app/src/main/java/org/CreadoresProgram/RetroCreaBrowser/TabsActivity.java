@@ -7,6 +7,7 @@ import android.os.Build;
 import android.content.Intent;
 import android.widget.TextView;
 import android.widget.ImageView;
+import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.LinearLayout;
 import android.view.View;
@@ -27,6 +28,16 @@ public class TabsActivity extends Activity {
             TextView actionBarTitle = (TextView) findViewById(R.id.top_bar_title);
             actionBarTitle.setText(R.string.tabs);
         }
+        ImageButton createTabBtn = (ImageButton) findViewById(R.id.createTab);
+        createTabBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(this, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                finish();
+            }
+        });
         LinearLayout containerList = (LinearLayout) findViewById(R.id.containerList);
         containerList.removeAllViews();
         LayoutInflater inflater = LayoutInflater.from(this);
