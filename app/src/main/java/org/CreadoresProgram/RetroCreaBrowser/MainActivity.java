@@ -389,7 +389,7 @@ public class MainActivity extends Activity {
         tvUserAgent.setText(R.string.user_agent);
         tvUserAgent.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
         tvUserAgent.setPadding(0, 10, 0, 5);
-        final List<UserAgentManager.UserAgentItem> userAgents = UserAgentManager.getUserAgents();
+        final List<UserAgentManager.UserAgentItem> userAgents = UserAgentManager.getUserAgents(this);
         final Spinner spinnerUserAgents = new Spinner(this);
         ArrayAdapter<UserAgentManager.UserAgentItem> adapterUA = new ArrayAdapter<UserAgentManager.UserAgentItem>(this, android.R.layout.simple_spinner_item, userAgents);
         adapterUA.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
