@@ -1,3 +1,4 @@
 <resources>
     <string name="tabs">Pestañas</string>
+    <string name="create_tab">Abrir Pestaña</string>
 </resources>
