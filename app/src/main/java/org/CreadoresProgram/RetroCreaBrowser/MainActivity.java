@@ -46,6 +46,8 @@ import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.content.res.ColorStateList;
 
 import org.CreadoresProgram.WebViewCREA.WebViewCreaClient;
@@ -75,6 +77,7 @@ public class MainActivity extends Activity {
     private static final int MENU_CONFIG = 1001;
     private static final int MENU_MARKS = 1002;
     private static final int MENU_EXTS = 1003;//extensions JS
+    private static final int MENU_EXIT = 1004;
     private String colorExt;
 
     @Override
@@ -434,6 +437,45 @@ public class MainActivity extends Activity {
         }
         input.setSelectAllOnFocus(true);
 
+        CheckBox markCheckBox = new CheckBox(this);
+        markCheckBox.setText(R.string.mark);
+        List<MarksManager.Mark> listMarks = MarksManager.getMarks(this);
+        boolean isSaved = false;
+        final String currentUrl = webView.getUrl();
+        for (MarksManager.Mark mark : listMarks) {
+            if (currentUrl.equals(mark.url)) {
+                isSaved = true;
+                break;
+            }
+        }
+        markCheckBox.setChecked(isSaved);
+        markCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    List<MarksManager.Mark> list = MarksManager.getMarks(MainActivity.this);
+                    boolean exist = false;
+                    for (MarksManager.Mark m : list) {
+                        if (currentUrl.equals(m.url)) {
+                            exist = true;
+                            break;
+                        }
+                    }
+                    if (!exist) {
+                        MarksManager.addMark(MainActivity.this, new MarksManager.Mark(webView.getTitle(), currentUrl));
+                    }
+                } else {
+                    List<MarksManager.Mark> list = MarksManager.getMarks(MainActivity.this);
+                    for (int i = 0; i < list.size(); i++) {
+                        if (currentUrl.equals(list.get(i).url)) {
+                            MarksManager.removeMark(MainActivity.this, i);
+                            break;
+                        }
+                    }
+                }
+            }
+        });
+
         Button shareBtn = new Button(this);
         shareBtn.setText(R.string.share);
         shareBtn.setOnClickListener(new View.OnClickListener() {
@@ -449,6 +491,7 @@ public class MainActivity extends Activity {
         layout.addView(spinnerEngines);
         layout.addView(tvInput);
         layout.addView(input);
+        layout.addView(markCheckBox);
         layout.addView(shareBtn);
 
         builder.setView(layout);
@@ -681,9 +724,10 @@ public class MainActivity extends Activity {
     
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        //menu.add(Menu.NONE, MENU_CONFIG, Menu.NONE, R.string.config);
+        menu.add(Menu.NONE, MENU_CONFIG, Menu.NONE, R.string.config);
         menu.add(Menu.NONE, MENU_MARKS, Menu.NONE, R.string.marks);
-        //menu.add(Menu.NONE, MENU_EXTS, Menu.NONE, R.string.exts);
+        menu.add(Menu.NONE, MENU_EXTS, Menu.NONE, R.string.exts);
+        menu.add(Menu.NONE, MENU_EXIT, Menu.NONE, R.string.exit);
         return super.onCreateOptionsMenu(menu);
     }
     
@@ -697,6 +741,8 @@ public class MainActivity extends Activity {
             Intent intent = new Intent(this, MarksActivity.class);
             startActivity(intent);
             return true;
+        }else if(id == MENU_EXIT){
+            finish();
         }
         return super.onOptionsItemSelected(item);
     }
