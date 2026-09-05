@@ -77,8 +77,9 @@ public class MainActivity extends Activity {
     private static final String SCHEME_MARKS_PREFIX = "marks://";
     private static final int MENU_CONFIG = 1001;
     private static final int MENU_MARKS = 1002;
-    private static final int MENU_EXTS = 1003;//extensions JS
-    private static final int MENU_EXIT = 1004;
+    private static final int MENU_HISTORY = 1003;
+    private static final int MENU_EXTS = 1004;//extensions JS
+    private static final int MENU_EXIT = 1005;
     private String colorExt;
 
     @Override
@@ -731,6 +732,7 @@ public class MainActivity extends Activity {
     public boolean onCreateOptionsMenu(Menu menu) {
         menu.add(Menu.NONE, MENU_CONFIG, Menu.NONE, R.string.config);
         menu.add(Menu.NONE, MENU_MARKS, Menu.NONE, R.string.marks);
+        menu.add(Menu.NONE, MENU_HISTORY, Menu.NONE, R.string.history);
         menu.add(Menu.NONE, MENU_EXTS, Menu.NONE, R.string.exts);
         menu.add(Menu.NONE, MENU_EXIT, Menu.NONE, R.string.exit);
         return super.onCreateOptionsMenu(menu);
@@ -748,6 +750,7 @@ public class MainActivity extends Activity {
             return true;
         }else if(id == MENU_EXIT){
             finish();
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
