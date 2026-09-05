@@ -368,6 +368,8 @@ public class MainActivity extends Activity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.app_name);
 
+        ScrollView scrollView = new ScrollView(this);
+
         LinearLayout layout = new LinearLayout(this);
         layout.setOrientation(LinearLayout.VERTICAL);
         layout.setPadding(30, 20, 30, 10);
@@ -494,7 +496,9 @@ public class MainActivity extends Activity {
         layout.addView(markCheckBox);
         layout.addView(shareBtn);
 
-        builder.setView(layout);
+        scrollView.addView(layout);
+
+        builder.setView(scrollView);
 
         builder.setPositiveButton(android.R.string.search_go, new DialogInterface.OnClickListener() {
             @Override
