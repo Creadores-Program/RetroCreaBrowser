@@ -48,6 +48,7 @@ import android.widget.TextView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.ScrollView;
 import android.content.res.ColorStateList;
 
 import org.CreadoresProgram.WebViewCREA.WebViewCreaClient;
