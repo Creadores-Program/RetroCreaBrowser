@@ -12,4 +12,5 @@
     <string name="exit">Salir</string>
     <string name="config">Ajustes</string>
     <string name="exts">Extensiones</string>
+    <string name="history">Historial</string>
 </resources>
