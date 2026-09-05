@@ -54,6 +54,7 @@ public class MarksActivity extends Activity {
                 return true;
             }
         });
+        loadMarks();
     }
     private void loadMarks() {
         List<MarksManager.Mark> allBookmarks = MarksManager.getMarks(this);
