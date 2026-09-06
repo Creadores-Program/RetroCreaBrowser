@@ -1,5 +1,6 @@
 package org.CreadoresProgram.RetroCreaBrowser;
 
+import android.os.Build;
 import android.content.Context;
 import android.content.SharedPreferences;
 import java.util.ArrayList;
@@ -51,7 +52,11 @@ public class SearchEngineManager {
         }
         SharedPreferences.Editor editor = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE).edit();
         editor.putString(KEY_ENGINES, sb.toString());
-        editor.commit();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
+            editor.apply();
+        } else {
+            editor.commit();
+        }
     }
 
     public static int getSelectedEngineIndex(Context context) {
