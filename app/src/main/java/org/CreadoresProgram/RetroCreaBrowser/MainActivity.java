@@ -176,8 +176,24 @@ public class MainActivity extends Activity {
                     handler.proceed();
                     return;
                 }
-                //request a user
-                handler.cancel();
+                new AlertDialog.Builder(MainActivity.this)
+                     .setIcon(android.R.drawable.ic_dialog_alert)
+                     .setTitle(android.R.string.dialog_alert_title)
+                     .setMessage(R.string.tls_error)
+                     .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                         @Override
+                         public void onClick(DialogInterface dialog, int which) {
+                             handler.proceed();
+                         }
+                     })
+                     .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                         @Override
+                         public void onClick(DialogInterface dialog, int which) {
+                             handler.cancel();
+                         }
+                     })
+                     .setCancelable(false)
+                     .create().show();
             }
             @Override
             public void onReceivedClientCertRequest(WebView view, final ClientCertRequest request) {
@@ -368,6 +384,7 @@ public class MainActivity extends Activity {
 
     private void showSearchDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setIcon(R.drawable.ic_launcher);
         builder.setTitle(R.string.app_name);
 
         ScrollView scrollView = new ScrollView(this);
