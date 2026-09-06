@@ -34,6 +34,8 @@ public class MarksActivity extends Activity {
             actionBarTitle.setText(R.string.marks);
         }
         this.listView = (ListView) findViewById(R.id.listViewMarks);
+        adapter = new MarkAdapter(this, bookmarkList);
+        listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -58,23 +60,21 @@ public class MarksActivity extends Activity {
     }
     private void loadMarks() {
         List<MarksManager.Mark> allBookmarks = MarksManager.getMarks(this);
-        bookmarkList = new ArrayList<MarksManager.Mark>();
-
-        for (int i = 0; i < allBookmarks.size(); i++) {
-            MarksManager.Mark b = allBookmarks.get(i);
-            bookmarkList.add(b);
+        bookmarkList.clear();
+        bookmarkList.addAll(allBookmarks);
+        if (adapter != null) {
+            adapter.notifyDataSetChanged();
         }
-
-        adapter = new MarkAdapter(this, bookmarkList);
-        listView.setAdapter(adapter);
     }
     private static class MarkAdapter extends BaseAdapter {
         private Context context;
         private List<MarksManager.Mark> list;
+        private LayoutInflater inflater;
 
         public MarkAdapter(Context context, List<MarksManager.Mark> list) {
             this.context = context;
             this.list = list;
+            this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
 
         @Override
@@ -94,17 +94,20 @@ public class MarksActivity extends Activity {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
+            ViewHolder holder;
             if (convertView == null) {
-                LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 convertView = inflater.inflate(android.R.layout.simple_list_item_2, parent, false);
+                holder = new ViewHolder();
+                holder.text1 = (TextView) convertView.findViewById(android.R.id.text1);
+                holder.text2 = (TextView) convertView.findViewById(android.R.id.text2);
+                convertView.setTag(holder);
+            } else {
+                holder = (ViewHolder) convertView.getTag();
             }
 
             MarksManager.Mark item = list.get(position);
-            TextView text1 = (TextView) convertView.findViewById(android.R.id.text1);
-            TextView text2 = (TextView) convertView.findViewById(android.R.id.text2);
-
-            text1.setText(item.title);
-            text2.setText(item.url);
+            holder.text1.setText(item.title);
+            holder.text2.setText(item.url);
 
             return convertView;
         }
