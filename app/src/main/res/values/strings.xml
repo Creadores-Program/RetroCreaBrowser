@@ -13,4 +13,5 @@
     <string name="config">Ajustes</string>
     <string name="exts">Extensiones</string>
     <string name="history">Historial</string>
+    <string name="tls_error">Existe un problema con el certificado de seguridad de este sitio web. ¿Deseas continuar de todos modos?</string>
 </resources>
