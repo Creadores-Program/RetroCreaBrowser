@@ -1,5 +1,6 @@
 package org.CreadoresProgram.RetroCreaBrowser;
 
+import android.os.Build;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.webkit.WebView;
@@ -78,7 +79,13 @@ public class UserAgentManager {
 
     public static void setSelectedUserAgentIndex(Context context, int index) {
         SharedPreferences prefs = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
-        prefs.edit().putInt(KEY_SELECTED_INDEX, index).apply();
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putInt(KEY_SELECTED_INDEX, index);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
+            editor.apply();
+        } else {
+            editor.commit();
+        }
     }
 
     public static void applySelectedUserAgent(Context context, WebView webView, WebViewCreaClient creaClient) {
