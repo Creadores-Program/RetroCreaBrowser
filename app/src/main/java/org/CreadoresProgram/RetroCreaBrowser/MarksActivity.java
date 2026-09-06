@@ -71,6 +71,11 @@ public class MarksActivity extends Activity {
         private List<MarksManager.Mark> list;
         private LayoutInflater inflater;
 
+        static class ViewHolder {
+            TextView text1;
+            TextView text2;
+        }
+
         public MarkAdapter(Context context, List<MarksManager.Mark> list) {
             this.context = context;
             this.list = list;
