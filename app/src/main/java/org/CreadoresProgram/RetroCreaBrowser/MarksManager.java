@@ -1,5 +1,6 @@
 package org.CreadoresProgram.RetroCreaBrowser;
 
+import android.os.Build;
 import android.content.Context;
 import android.content.SharedPreferences;
 import java.util.ArrayList;
@@ -45,7 +46,11 @@ public class MarksManager {
         }
         SharedPreferences.Editor editor = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE).edit();
         editor.putString(KEY_BOOKMARKS, sb.toString());
-        editor.commit();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
+            editor.apply();
+        } else {
+            editor.commit();
+        }
     }
 
     public static void addMark(Context context, Mark bookmark) {
