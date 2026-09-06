@@ -167,6 +167,7 @@ public class MainActivity extends Activity {
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
+                HistoryManager.addHistory(MainActivity.this, view.getTitle(), url);
                 WebViewUtils.evaluateJS(webView, colorExt);
                 progressBar.setVisibility(View.GONE);
             }
