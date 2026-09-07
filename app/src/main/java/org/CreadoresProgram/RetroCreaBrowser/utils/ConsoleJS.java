@@ -133,7 +133,8 @@ public class ConsoleJS {
             .setIcon(android.R.drawable.ic_menu_preferences)
             .setTitle(R.string.console)
             .setView(scrollView)
-            .setPositiveButton(R.string.close, null);
+            .setPositiveButton(R.string.close, null)
+            .setCancelable(false);
 
         builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
