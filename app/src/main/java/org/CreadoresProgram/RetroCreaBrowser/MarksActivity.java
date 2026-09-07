@@ -23,7 +23,7 @@ public class MarksActivity extends Activity {
     private ImageView actionBarIcon;
     private ListView listView;
     private MarkAdapter adapter;
-    private List<MarksManager.Mark> bookmarkList;
+    private List<MarksManager.Mark> bookmarkList = new ArrayList<MarksManager.Mark>();
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
