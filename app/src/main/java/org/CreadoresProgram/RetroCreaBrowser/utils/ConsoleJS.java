@@ -18,6 +18,7 @@ import java.util.ArrayDeque;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import org.CreadoresProgram.RetroCreaBrowser.R;
 import org.CreadoresProgram.WebViewCREA.WebViewCreaClient;
 
 public class ConsoleJS {
