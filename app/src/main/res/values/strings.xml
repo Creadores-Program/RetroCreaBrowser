@@ -1,6 +1,7 @@
 <resources>
     <string name="marks">Marcadores</string>
     <string name="mark">Marcador</string>
+    <string name="no_marks">No hay marcadores guardados</string>
     <string name="share">Compartir</string>
     <string name="del_mark">Marcador eliminado</string>
     <string name="reload">Recargar</string>
