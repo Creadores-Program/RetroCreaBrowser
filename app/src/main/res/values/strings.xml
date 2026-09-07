@@ -20,4 +20,8 @@
     <string name="close">Cerrar</string>
     <string name="evaljs">Ejecutar JS</string>
     <string name="console">Consola</string>
+    <string name="clear_history">Vaciar historial</string>
+    <string name="no_history">No hay historial de navegación</string>
+    <string name="del_history_item">Elemento eliminado del historial</string>
+    <string name="history_cleared">Historial vaciado</string>
 </resources>
