@@ -130,7 +130,7 @@ public class ConsoleJS {
         rootLayout.addView(inputContainer);
         updateTextView();
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(context)
+        new AlertDialog.Builder(context)
             .setIcon(android.R.drawable.ic_menu_preferences)
             .setTitle(R.string.console)
             .setView(rootLayout)
