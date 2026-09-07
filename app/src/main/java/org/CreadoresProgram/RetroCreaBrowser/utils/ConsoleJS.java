@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.os.Build;
+import android.text.TextUtils;
 import android.webkit.WebView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -77,7 +78,7 @@ public class ConsoleJS {
     public void showConsoleDialog(Context context, final WebViewCreaClient viewClient, final WebView view) {
         LinearLayout rootLayout = new LinearLayout(context);
         rootLayout.setOrientation(LinearLayout.VERTICAL);
-        rootLayout.setPadding(15, 15, 15, 15)
+        rootLayout.setPadding(15, 15, 15, 15);
         ScrollView scrollView = new ScrollView(context);
         LinearLayout.LayoutParams scrollParams = new LinearLayout.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT, 0, 1.0f);
@@ -113,7 +114,7 @@ public class ConsoleJS {
             @Override
             public void onClick(View v) {
                 String code = inputJs.getText().toString().trim();
-                if (!code.isEmpty() && webViewClient != null) {
+                if (!TextUtil.isEmpty(code) && viewClient != null) {
                     appendLog("> " + code);
                     
                     viewClient.evaluateJavascript(view, code);
@@ -128,6 +129,7 @@ public class ConsoleJS {
         updateTextView();
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context)
+            .setIcon(android.R.drawable.ic_menu_preferences)
             .setTitle(R.string.console)
             .setView(scrollView)
             .setPositiveButton(R.string.close, null);
