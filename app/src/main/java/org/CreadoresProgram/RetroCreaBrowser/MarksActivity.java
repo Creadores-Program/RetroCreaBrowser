@@ -34,6 +34,8 @@ public class MarksActivity extends Activity {
             actionBarTitle.setText(R.string.marks);
         }
         this.listView = (ListView) findViewById(R.id.listViewMarks);
+        TextView emptyView = (TextView) findViewById(R.id.emptyView);
+        this.listView.setEmptyView(emptyView);
         adapter = new MarkAdapter(this, bookmarkList);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
