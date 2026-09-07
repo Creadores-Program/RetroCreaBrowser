@@ -10,7 +10,8 @@
         android:layout_height="32dp"
         android:layout_centerVertical="true"
         android:layout_marginLeft="12dp"
-        android:scaleType="fitCenter" />
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_launcher" />
 
     <TextView
         android:id="@+id/top_bar_title"
