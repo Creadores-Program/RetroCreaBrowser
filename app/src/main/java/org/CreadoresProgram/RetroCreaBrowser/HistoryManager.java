@@ -3,6 +3,7 @@ package org.CreadoresProgram.RetroCreaBrowser;
 import android.os.Build;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.text.TextUtils;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +28,7 @@ public class HistoryManager {
         String rawData = prefs.getString(KEY_HISTORY, null);
         List<HistoryItem> list = new ArrayList<HistoryItem>();
 
-        if (rawData != null && rawData.trim().length() > 0) {
+        if (rawData != null && !TextUtils.isEmpty(rawData)) {
             String[] items = rawData.split(";");
             for (String item : items) {
                 String[] parts = item.split("\\|");

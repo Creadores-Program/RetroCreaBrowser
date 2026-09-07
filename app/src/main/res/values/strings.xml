@@ -14,4 +14,9 @@
     <string name="exts">Extensiones</string>
     <string name="history">Historial</string>
     <string name="tls_error">Existe un problema con el certificado de seguridad de este sitio web. ¿Deseas continuar de todos modos?</string>
+    <string name="warnconsolejs">ADVERTENCIA: No ejecutes codigo si no sabes lo que hace, si el codigo lo encontraste en un  sitio raro podria ser malware!</string>
+    <string name="send">Enviar</string>
+    <string name="close">Cerrar</string>
+    <string name="evaljs">Ejecutar JS</string>
+    <string name="console">Consola</string>
 </resources>

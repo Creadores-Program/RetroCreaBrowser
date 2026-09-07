@@ -3,6 +3,7 @@ package org.CreadoresProgram.RetroCreaBrowser;
 import android.os.Build;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.text.TextUtils;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +27,7 @@ public class SearchEngineManager {
         String rawData = prefs.getString(KEY_ENGINES, null);
         List<Engine> list = new ArrayList<Engine>();
 
-        if (rawData == null || rawData.trim().length() == 0) {
+        if (rawData == null || TextUtils.isEmpty(rawData)) {
             list.add(new Engine("DuckDuckGo Lite", "https://lite.duckduckgo.com/lite/?q=%s"));
             list.add(new Engine("Google", "https://www.google.com/search?q=%s"));
             list.add(new Engine("Bing", "https://www.bing.com/search?q=%s"));

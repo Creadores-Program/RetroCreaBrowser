@@ -72,6 +72,7 @@ public class MainActivity extends Activity {
     private Drawable originalActionBarTheme;
     private Drawable originalXmlBackground;
     private int originalStatusBarTheme;
+    private final ConsoleJS consoleJS = new ConsoleJS();
 
     private static final String SCHEME_COLOR_PREFIX = "app-color://";
     private static final String SCHEME_MARKS_PREFIX = "marks://";
@@ -170,6 +171,7 @@ public class MainActivity extends Activity {
                 HistoryManager.addHistory(MainActivity.this, view.getTitle(), url);
                 WebViewUtils.evaluateJS(webView, colorExt);
                 progressBar.setVisibility(View.GONE);
+                consoleJS.appendLog(R.string.warnconsolejs);
             }
             @Override
             public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
@@ -181,13 +183,13 @@ public class MainActivity extends Activity {
                      .setIcon(android.R.drawable.ic_dialog_alert)
                      .setTitle(android.R.string.dialog_alert_title)
                      .setMessage(R.string.tls_error)
-                     .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                          @Override
                          public void onClick(DialogInterface dialog, int which) {
                              handler.proceed();
                          }
                      })
-                     .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                     .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
                          @Override
                          public void onClick(DialogInterface dialog, int which) {
                              handler.cancel();
@@ -240,6 +242,19 @@ public class MainActivity extends Activity {
             public void onReceivedIcon(WebView view, Bitmap icon) {
                 super.onReceivedIcon(view, icon);
                 updateIcon(icon);
+            }
+            @SuppressWarnings("deprecation")
+            @Override
+            public void onConsoleMessage(String message, int lineNumber, String sourceID) {
+                unionConsoleMsg("LOG", message, lineNumber, sourceID);
+            }
+            @Override
+            public boolean onConsoleMessage(ConsoleMessage consoleMessage) {
+                unionConsoleMsg((consoleMessage.messageLevel() != null ? consoleMessage.messageLevel().name() : "LOG"), consoleMessage.message(), consoleMessage.lineNumber(), consoleMessage.sourceId());
+                return true;
+            }
+            private void unionConsoleMsg(String level, String message, int lineNumber, String sourceID){
+                consoleJS.appendLog("["+level+"] "+message+" ("+sourceID+":"+lineNumber+")");
             }
         });
 
@@ -498,6 +513,15 @@ public class MainActivity extends Activity {
             }
         });
 
+        Button consoleJSBtn = new Button(this);
+        consoleJSBtn.setText(R.string.console);
+        consoleJSBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                consoleJS.showConsoleDialog(MainActivity.this, creaClient, webView);
+            }
+        });
+
         Button shareBtn = new Button(this);
         shareBtn.setText(R.string.share);
         shareBtn.setOnClickListener(new View.OnClickListener() {
@@ -514,6 +538,7 @@ public class MainActivity extends Activity {
         layout.addView(tvInput);
         layout.addView(input);
         layout.addView(markCheckBox);
+        layout.addView(consoleJSBtn);
         layout.addView(shareBtn);
 
         scrollView.addView(layout);
@@ -524,7 +549,7 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String query = input.getText().toString().trim();
-                if (query.length() > 0) {
+                if (!TextUtils.isEmpty(query)) {
                     if (query.startsWith("http://") || query.startsWith("https://") || query.startsWith("javascript:")) {
                         creaClient.loadUrl(webView, query);
                     } else{
@@ -572,7 +597,7 @@ public class MainActivity extends Activity {
     private void applyDynamicColor(String color){
         try{
             color = java.net.URLDecoder.decode(color, "UTF-8");
-            if ("default".equals(color) || color.trim().length() == 0) {
+            if ("default".equals(color) || TextUtils.isEmpty(color)) {
                 resetDefaultBar();
                 return;
             }
