@@ -23,18 +23,18 @@ import org.CreadoresProgram.WebViewCREA.WebViewCreaClient;
 
 public class ConsoleJS {
 
-    private final Queue<String> logQueue;
+    private Queue<String> logQueue;
     private final StringBuilder logBuilder = new StringBuilder();
     private TextView consoleTextView;
 
     public ConsoleJS() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
-            queueH();
+            queueG();
         } else {
             logQueue = new LinkedList<String>();
         }
     }
-    private void queueH(){
+    private void queueG(){
         logQueue = new ArrayDeque<String>(30);
     }
 
@@ -115,7 +115,7 @@ public class ConsoleJS {
             @Override
             public void onClick(View v) {
                 String code = inputJs.getText().toString().trim();
-                if (!TextUtil.isEmpty(code) && viewClient != null) {
+                if (!TextUtils.isEmpty(code) && viewClient != null) {
                     appendLog("> " + code);
                     
                     viewClient.evaluateJavascript(view, code);
