@@ -133,17 +133,21 @@ public class ConsoleJS {
         AlertDialog.Builder builder = new AlertDialog.Builder(context)
             .setIcon(android.R.drawable.ic_menu_preferences)
             .setTitle(R.string.console)
-            .setView(scrollView)
-            .setPositiveButton(R.string.close, null)
-            .setCancelable(false);
-
-        builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-                consoleTextView = null;
-            }
-        });
-
-        builder.show();
+            .setView(rootLayout)
+            .setPositiveButton(R.string.close, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    consoleTextView = null;
+                    dialog.dismiss();
+                }
+            })
+            .setOnCancelListener(new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface dialog) {
+                    consoleTextView = null;
+                }
+            })
+            .setCancelable(false)
+            .create().show();
     }
 }
