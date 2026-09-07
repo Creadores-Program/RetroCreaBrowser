@@ -791,6 +791,10 @@ public class MainActivity extends Activity {
             Intent intent = new Intent(this, MarksActivity.class);
             startActivity(intent);
             return true;
+        }else if(id == MENU_HISTORY){
+            Intent intent = new Intent(this, HistoryActivity.class);
+            startActivity(intent);
+            return true;
         }else if(id == MENU_EXIT){
             finish();
             return true;
