@@ -35,6 +35,7 @@ import android.webkit.CookieManager;
 import android.webkit.WebIconDatabase;
 import android.webkit.WebResourceRequest;
 import android.webkit.SslErrorHandler;
+import android.webkit.ConsoleMessage;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -171,7 +172,7 @@ public class MainActivity extends Activity {
                 HistoryManager.addHistory(MainActivity.this, view.getTitle(), url);
                 WebViewUtils.evaluateJS(webView, colorExt);
                 progressBar.setVisibility(View.GONE);
-                consoleJS.appendLog(R.string.warnconsolejs);
+                consoleJS.appendLog(MainActivity.this.getString(R.string.warnconsolejs));
             }
             @Override
             public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
