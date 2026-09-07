@@ -76,13 +76,14 @@ public class ConsoleJS {
         }
     }
 
+    @SuppressWarnings("deprecation")
     public void showConsoleDialog(Context context, final WebViewCreaClient viewClient, final WebView view) {
         LinearLayout rootLayout = new LinearLayout(context);
         rootLayout.setOrientation(LinearLayout.VERTICAL);
         rootLayout.setPadding(15, 15, 15, 15);
         ScrollView scrollView = new ScrollView(context);
         LinearLayout.LayoutParams scrollParams = new LinearLayout.LayoutParams(
-            ViewGroup.LayoutParams.MATCH_PARENT, 0, 1.0f);
+            ViewGroup.LayoutParams.FILL_PARENT, 0, 1.0f);
         scrollView.setLayoutParams(scrollParams);
         
         consoleTextView = new TextView(context);
@@ -98,7 +99,7 @@ public class ConsoleJS {
         LinearLayout inputContainer = new LinearLayout(context);
         inputContainer.setOrientation(LinearLayout.HORIZONTAL);
         LinearLayout.LayoutParams inputContainerParams = new LinearLayout.LayoutParams(
-            ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         inputContainer.setLayoutParams(inputContainerParams);
 
         final EditText inputJs = new EditText(context);
