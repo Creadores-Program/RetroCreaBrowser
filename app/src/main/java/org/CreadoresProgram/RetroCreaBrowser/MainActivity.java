@@ -527,7 +527,7 @@ public class MainActivity extends Activity {
         viewSourceBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                WebViewUtils.evaluateJS(webView, "(function (){var h=document.documentElement.outerHTML||document.createElement('div').appendChild(document.documentElement.cloneNode(true)).parentNode.innerHTML;document.open('text/plain','replace');document.write('<!DOCTYPE html>\\n'+h);document.close();})();");
+                WebViewUtils.evaluateJS(webView, "(function(){var h='<!DOCTYPE html>\\n'+(document.documentElement.outerHTML||document.createElement('div').appendChild(document.documentElement.cloneNode(true)).parentNode.innerHTML);document.open();document.write('<pre style=\"white-space:pre-wrap;word-wrap:break-word;font-family:monospace;\">'+h.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')+'</pre>');document.close();})();");
             }
         });
 
