@@ -522,6 +522,15 @@ public class MainActivity extends Activity {
             }
         });
 
+        Button viewSourceBtn = new Button(this);
+        viewSourceBtn.setText(R.string.view_source);
+        viewSourceBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                WebViewUtils.evaluateJS(webView, "(function (){var h=document.documentElement.outerHTML||document.createElement('div').appendChild(document.documentElement.cloneNode(true)).parentNode.innerHTML;document.open('text/plain','replace');document.write('<!DOCTYPE html>\n'+h);document.close();})();");
+            }
+        });
+
         Button shareBtn = new Button(this);
         shareBtn.setText(R.string.share);
         shareBtn.setOnClickListener(new View.OnClickListener() {
@@ -539,6 +548,7 @@ public class MainActivity extends Activity {
         layout.addView(input);
         layout.addView(markCheckBox);
         layout.addView(consoleJSBtn);
+        layout.addView(viewSourceBtn);
         layout.addView(shareBtn);
 
         scrollView.addView(layout);
