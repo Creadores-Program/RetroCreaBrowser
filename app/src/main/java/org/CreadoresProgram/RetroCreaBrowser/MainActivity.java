@@ -523,7 +523,7 @@ public class MainActivity extends Activity {
         });
 
         Button viewSourceBtn = new Button(this);
-        viewSourceBtn.setText(R.string.view_source);
+        viewSourceBtn.setText(R.string.view_code);
         viewSourceBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
