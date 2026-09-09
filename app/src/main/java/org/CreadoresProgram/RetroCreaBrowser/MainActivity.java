@@ -148,7 +148,7 @@ public class MainActivity extends Activity {
                         if(TextUtils.isEmpty(query)){
                             return true;
                         }
-                        int selectedPos = spinnerEngines.getSelectedItemPosition();
+                        int selectedPos = SearchEngineManager.getSelectedEngineIndex(MainActivity.this);
                         SearchEngineManager.Engine selectedEngine = engines.get(selectedPos);
                         try {
                             String searchUrl = String.format(selectedEngine.searchUrl, query);
