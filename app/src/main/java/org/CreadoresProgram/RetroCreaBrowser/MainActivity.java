@@ -55,6 +55,7 @@ import android.content.res.ColorStateList;
 import org.CreadoresProgram.WebViewCREA.WebViewCreaClient;
 import org.CreadoresProgram.RetroCreaBrowser.browserconfig.SetConfigOkClient;
 import org.CreadoresProgram.RetroCreaBrowser.utils.*;
+import java.net.URLDecoder;
 import java.security.PrivateKey;
 import java.security.cert.X509Certificate;
 import java.net.URISyntaxException;
@@ -77,6 +78,8 @@ public class MainActivity extends Activity {
 
     private static final String SCHEME_COLOR_PREFIX = "app-color://";
     private static final String SCHEME_MARKS_PREFIX = "marks://";
+    private static final String SCHEME_HISTORY_PREFIX = "history://";
+    private static final String SCHEME_SEARCH_PREFIX = "search://";
     private static final int MENU_CONFIG = 1001;
     private static final int MENU_MARKS = 1002;
     private static final int MENU_HISTORY = 1003;
@@ -128,14 +131,33 @@ public class MainActivity extends Activity {
             @SuppressWarnings("deprecation")
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                if (url != null && url.startsWith(SCHEME_COLOR_PREFIX)) {
-                    applyDynamicColor(url.substring(SCHEME_COLOR_PREFIX.length()));
-                    return true;
-                }
-                if(url != null && url.startsWith(SCHEME_MARKS_PREFIX)){
-                    Intent intent = new Intent(MainActivity.this, MarksActivity.class);
-                    startActivity(intent);
-                    return true;
+                if(url != null && !TextUtils.isEmpty(url)){
+                    if (url.startsWith(SCHEME_COLOR_PREFIX)) {
+                        applyDynamicColor(url.substring(SCHEME_COLOR_PREFIX.length()));
+                        return true;
+                    }else if(url.startsWith(SCHEME_MARKS_PREFIX)){
+                        Intent intent = new Intent(MainActivity.this, MarksActivity.class);
+                        startActivity(intent);
+                        return true;
+                    }else if(url.startsWith(SCHEME_HISTORY_PREFIX)){
+                        Intent intent new Intent(MainActivity.this, HistoryActivity.class);
+                        startActivity(intent);
+                        return true;
+                    }else if(url.startsWith(SCHEME_SEARCH_PREFIX)){
+                        String query = url.substring(SCHEME_SEARCH_PREFIX.length());
+                        if(TextUtils.isEmpty(query)){
+                            return true;
+                        }
+                        int selectedPos = spinnerEngines.getSelectedItemPosition();
+                        SearchEngineManager.Engine selectedEngine = engines.get(selectedPos);
+                        try {
+                            String searchUrl = String.format(selectedEngine.searchUrl, query);
+                            creaClient.loadUrl(webView, searchUrl);
+                        } catch (Exception e) {
+                            creaClient.loadUrl(webView, selectedEngine.searchUrl.replace("%s", query));
+                        }
+                        return true;
+                    }
                 }
                 if (openInExternalAppIfPossible(url)) {
                     return true;
@@ -608,7 +630,7 @@ public class MainActivity extends Activity {
 
     private void applyDynamicColor(String color){
         try{
-            color = java.net.URLDecoder.decode(color, "UTF-8");
+            color = URLDecoder.decode(color, "UTF-8");
             if ("default".equals(color) || TextUtils.isEmpty(color)) {
                 resetDefaultBar();
                 return;
