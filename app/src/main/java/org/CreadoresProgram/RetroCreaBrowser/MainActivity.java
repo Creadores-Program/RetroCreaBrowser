@@ -140,7 +140,7 @@ public class MainActivity extends Activity {
                         startActivity(intent);
                         return true;
                     }else if(url.startsWith(SCHEME_HISTORY_PREFIX)){
-                        Intent intent new Intent(MainActivity.this, HistoryActivity.class);
+                        Intent intent = new Intent(MainActivity.this, HistoryActivity.class);
                         startActivity(intent);
                         return true;
                     }else if(url.startsWith(SCHEME_SEARCH_PREFIX)){
