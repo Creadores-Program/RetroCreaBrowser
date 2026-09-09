@@ -83,6 +83,7 @@ public class MainActivity extends Activity {
     private static final int MENU_EXTS = 1004;//extensions JS
     private static final int MENU_EXIT = 1005;
     private String colorExt;
+    private String viewcodeExt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -91,6 +92,7 @@ public class MainActivity extends Activity {
         this.webView = (WebView) findViewById(R.id.webview);
         this.progressBar = (ProgressBar) findViewById(R.id.progressBar);
         this.colorExt = AssetUtils.readAssetAsString(getAssets(), "colorExt.js");
+        this.viewcodeExt = AssetUtils.readAssetAsString(getAssets(), "viewcodeExt.js");
         
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD){
             this.actionBarTitle = (TextView) findViewById(R.id.top_bar_title);
@@ -527,7 +529,7 @@ public class MainActivity extends Activity {
         viewSourceBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                WebViewUtils.evaluateJS(webView, "(function(){var h='<!DOCTYPE html>\\n'+(document.documentElement.outerHTML||document.createElement('div').appendChild(document.documentElement.cloneNode(true)).parentNode.innerHTML);document.open();document.write('<pre style=\"white-space:pre-wrap;word-wrap:break-word;font-family:monospace;\">'+h.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')+'</pre>');document.close();})();");
+                WebViewUtils.evaluateJS(webView, viewcodeExt);
             }
         });
 
