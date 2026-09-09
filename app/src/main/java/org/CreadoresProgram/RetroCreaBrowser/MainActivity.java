@@ -149,6 +149,7 @@ public class MainActivity extends Activity {
                             return true;
                         }
                         int selectedPos = SearchEngineManager.getSelectedEngineIndex(MainActivity.this);
+                        List<SearchEngineManager.Engine> engines = SearchEngineManager.getEngines(MainActivity.this);
                         SearchEngineManager.Engine selectedEngine = engines.get(selectedPos);
                         try {
                             String searchUrl = String.format(selectedEngine.searchUrl, query);
