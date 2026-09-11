@@ -102,9 +102,10 @@ public class MainActivity extends Activity {
         this.viewcodeExt = AssetUtils.readAssetAsString(getAssets(), "viewcodeExt.js");
         
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD){
-            this.actionBarTitle = (TextView) findViewById(R.id.top_bar_title);
             getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.top_bar);
+            this.actionBar = (RelativeLayout) findViewById(R.id.top_bar_layout);
             originalXmlBackground = actionBar.getBackground();
+            this.actionBarTitle = (TextView) findViewById(R.id.top_bar_title);
             this.actionBarIcon = (ImageView) findViewById(R.id.top_bar_icon);
             WebIconDatabase.getInstance().open(getDir("icons", MODE_PRIVATE).getPath());
 
