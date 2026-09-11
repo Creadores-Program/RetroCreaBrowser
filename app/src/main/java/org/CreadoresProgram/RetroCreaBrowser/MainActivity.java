@@ -191,6 +191,14 @@ public class MainActivity extends Activity {
 
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon){
+                uniShowProgress();
+            }
+            @Override
+            public void onPatchStarted(WebView view, String url){
+                uniShowProgress();
+            }
+
+            private void uniShowProgress(){
                 progressBar.setVisibility(View.VISIBLE);
                 progressBar.bringToFront();
             }
@@ -262,7 +270,7 @@ public class MainActivity extends Activity {
             }
         };
 
-        creaClient.setWebChromeClient(webView, new WebChromeClient(){
+        webView.setWebChromeClient(new WebChromeClient(){
             @Override
             public void onReceivedTitle(WebView view, String title) {
                 super.onReceivedTitle(view, title);
