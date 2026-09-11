@@ -4,10 +4,6 @@
     android:layout_height="fill_parent"
     android:orientation="vertical">
 
-    <include
-        android:id="@+id/top_bar_container"
-        layout="@layout/top_bar" />
-
     <Button
         android:id="@+id/btnClearHistory"
         android:layout_width="fill_parent"
