@@ -91,6 +91,9 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
+        if(Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD){
+            requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
+        }
         setContentView(R.layout.layout_main);
         this.webView = (WebView) findViewById(R.id.webview);
         this.progressBar = (ProgressBar) findViewById(R.id.progressBar);
@@ -99,7 +102,7 @@ public class MainActivity extends Activity {
         
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD){
             this.actionBarTitle = (TextView) findViewById(R.id.top_bar_title);
-            this.actionBar = (RelativeLayout) findViewById(R.id.top_bar_container);
+            getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.top_bar);
             originalXmlBackground = actionBar.getBackground();
             this.actionBarIcon = (ImageView) findViewById(R.id.top_bar_icon);
             WebIconDatabase.getInstance().open(getDir("icons", MODE_PRIVATE).getPath());
