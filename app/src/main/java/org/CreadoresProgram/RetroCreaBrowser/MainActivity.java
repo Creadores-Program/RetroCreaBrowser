@@ -174,14 +174,34 @@ public class MainActivity extends Activity {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
                 String url = request.getUrl().toString();
-                if (url != null && url.startsWith(SCHEME_COLOR_PREFIX)) {
-                    applyDynamicColor(url.substring(SCHEME_COLOR_PREFIX.length()));
-                    return true;
-                }
-                if(url != null && url.startsWith(SCHEME_MARKS_PREFIX)){
-                    Intent intent = new Intent(MainActivity.this, MarksActivity.class);
-                    startActivity(intent);
-                    return true;
+                if(url != null && !TextUtils.isEmpty(url)){
+                    if (url.startsWith(SCHEME_COLOR_PREFIX)) {
+                        applyDynamicColor(url.substring(SCHEME_COLOR_PREFIX.length()));
+                        return true;
+                    }else if(url.startsWith(SCHEME_MARKS_PREFIX)){
+                        Intent intent = new Intent(MainActivity.this, MarksActivity.class);
+                        startActivity(intent);
+                        return true;
+                    }else if(url.startsWith(SCHEME_HISTORY_PREFIX)){
+                        Intent intent = new Intent(MainActivity.this, HistoryActivity.class);
+                        startActivity(intent);
+                        return true;
+                    }else if(url.startsWith(SCHEME_SEARCH_PREFIX)){
+                        String query = url.substring(SCHEME_SEARCH_PREFIX.length());
+                        if(TextUtils.isEmpty(query)){
+                            return true;
+                        }
+                        int selectedPos = SearchEngineManager.getSelectedEngineIndex(MainActivity.this);
+                        List<SearchEngineManager.Engine> engines = SearchEngineManager.getEngines(MainActivity.this);
+                        SearchEngineManager.Engine selectedEngine = engines.get(selectedPos);
+                        try {
+                            String searchUrl = String.format(selectedEngine.searchUrl, query);
+                            creaClient.loadUrl(webView, searchUrl);
+                        } catch (Exception e) {
+                            creaClient.loadUrl(webView, selectedEngine.searchUrl.replace("%s", query));
+                        }
+                        return true;
+                    }
                 }
                 if (openInExternalAppIfPossible(url)) {
                     return true;
