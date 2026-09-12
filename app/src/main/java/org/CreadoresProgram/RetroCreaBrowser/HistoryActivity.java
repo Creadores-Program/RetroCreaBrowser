@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
@@ -33,9 +34,13 @@ public class HistoryActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if(Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD){
+            requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
+        }
         setContentView(R.layout.layout_history);
 
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD) {
+            getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.top_bar);
             this.actionBarIcon = (ImageView) findViewById(R.id.top_bar_icon);
             TextView actionBarTitle = (TextView) findViewById(R.id.top_bar_title);
             if (actionBarTitle != null) {
