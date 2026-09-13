@@ -38,6 +38,7 @@ import android.webkit.WebResourceRequest;
 import android.webkit.SslErrorHandler;
 import android.webkit.ConsoleMessage;
 import android.webkit.DownloadListener;
+import android.webkit.URLUtil;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
