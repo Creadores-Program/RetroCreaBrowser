@@ -28,4 +28,7 @@
     <string name="start_downl">Iniciando Descarga...</string>
     <string name="error_downl">Error en descarga.</string>
     <string name="done_downl">Descarga completada: %1$s</string>
+    <string name="confirm_downl">Descargar Archivo</string>
+    <string name="downl_msg">¿Deseas descargar \"%1$s\" (%2$s)?</string>
+    <string name="unk_size">Tamaño desconocido</string>
 </resources>
