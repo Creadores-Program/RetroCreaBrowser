@@ -341,7 +341,9 @@ public class MainActivity extends Activity {
                 } else {
                     readableSize = getString(R.string.unk_size);
                 }
-
+                downAlert(url, userAgent, contentDisposition, mimetype, readableSize);
+            }
+            private void downAlert(final String url, final String userAgent, final String contentDisposition, final String mimetype, String readableSize){
                 new AlertDialog.Builder(MainActivity.this)
                     .setTitle(R.string.confirm_downl)
                     .setMessage(getString(R.string.downl_msg, fileName, readableSize))
