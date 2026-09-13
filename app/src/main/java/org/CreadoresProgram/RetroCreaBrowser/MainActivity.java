@@ -37,6 +37,7 @@ import android.webkit.WebIconDatabase;
 import android.webkit.WebResourceRequest;
 import android.webkit.SslErrorHandler;
 import android.webkit.ConsoleMessage;
+import android.webkit.DownloadListener;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -55,6 +56,7 @@ import android.content.res.ColorStateList;
 
 import org.CreadoresProgram.WebViewCREA.WebViewCreaClient;
 import org.CreadoresProgram.RetroCreaBrowser.browserconfig.SetConfigOkClient;
+import org.CreadoresProgram.RetroCreaBrowser.download.RBDownloadManager;
 import org.CreadoresProgram.RetroCreaBrowser.utils.*;
 import java.net.URLDecoder;
 import java.security.PrivateKey;
@@ -313,6 +315,40 @@ public class MainActivity extends Activity {
             }
             private void unionConsoleMsg(String level, String message, int lineNumber, String sourceID){
                 consoleJS.appendLog("["+level+"] "+message+" ("+sourceID+":"+lineNumber+")");
+            }
+        });
+
+        webView.setDownloadListener(new DownloadListener(){
+            @Override
+            public void onDownloadStart(String url, String userAgent, String contentDisposition,
+                String mimetype, long contentLength) {
+                if (userAgent == null || TextUtils.isEmpty(userAgent.trim())) {
+                    if (webView.getSettings() != null) {
+                        userAgent = webView.getSettings().getUserAgentString();
+                    }
+                }
+                if(MainActivity.this.isFinishing()){
+                    return;
+                }
+
+                final String fileName = URLUtil.guessFileName(url, contentDisposition, mimetype);
+
+                new AlertDialog.Builder(MainActivity.this)
+                    .setTitle(R.string.confirm_downl)
+                    .setMessage(getString(R.string.downl_msg, fileName))
+                    .setPositiveButton()
+                    .setNegativeButton()
+                    .setCancelable(false)
+                    .create().show();
+
+                RBDownloadManager.processDownload(
+                    MainActivity.this,
+                    creaClient.getNetClient(),
+                    url,
+                    userAgent,
+                    contentDisposition,
+                    mimetype
+                );
             }
         });
 

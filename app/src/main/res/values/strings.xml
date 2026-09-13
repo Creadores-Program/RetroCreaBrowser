@@ -25,4 +25,7 @@
     <string name="del_history_item">Elemento eliminado del historial</string>
     <string name="history_cleared">Historial vaciado</string>
     <string name="view_code">Ver Código</string>
+    <string name="start_downl">Iniciando Descarga...</string>
+    <string name="error_downl">Error en descarga.</string>
+    <string name="done_downl">Descarga completada: %1$s</string>
 </resources>
