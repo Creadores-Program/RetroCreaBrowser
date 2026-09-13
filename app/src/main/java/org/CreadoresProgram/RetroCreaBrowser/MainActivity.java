@@ -333,22 +333,33 @@ public class MainActivity extends Activity {
 
                 final String fileName = URLUtil.guessFileName(url, contentDisposition, mimetype);
 
+                String readableSize;
+
+                if (contentLength > 0) {
+                    readableSize = android.text.format.Formatter.formatFileSize(MainActivity.this, contentLength);
+                } else {
+                    readableSize = getString(R.string.unk_size);
+                }
+
                 new AlertDialog.Builder(MainActivity.this)
                     .setTitle(R.string.confirm_downl)
-                    .setMessage(getString(R.string.downl_msg, fileName))
-                    .setPositiveButton()
-                    .setNegativeButton()
+                    .setMessage(getString(R.string.downl_msg, fileName, readableSize))
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            RBDownloadManager.processDownload(
+                                MainActivity.this,
+                                creaClient.getNetClient(),
+                                url,
+                                userAgent,
+                                contentDisposition,
+                                mimetype
+                            );
+                        }
+                    })
+                    .setNegativeButton(android.R.string.no, null)
                     .setCancelable(false)
                     .create().show();
-
-                RBDownloadManager.processDownload(
-                    MainActivity.this,
-                    creaClient.getNetClient(),
-                    url,
-                    userAgent,
-                    contentDisposition,
-                    mimetype
-                );
             }
         });
 
@@ -687,7 +698,7 @@ public class MainActivity extends Activity {
             }
         }).setCancelable(false);
 
-        builder.show();
+        builder.create().show();
     }
 
     private void setActionBarHomeBtn(){
