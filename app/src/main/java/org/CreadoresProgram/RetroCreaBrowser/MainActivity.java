@@ -332,7 +332,7 @@ public class MainActivity extends Activity {
                     return;
                 }
 
-                final String fileName = URLUtil.guessFileName(url, contentDisposition, mimetype);
+                String fileName = URLUtil.guessFileName(url, contentDisposition, mimetype);
 
                 String readableSize;
 
@@ -341,9 +341,9 @@ public class MainActivity extends Activity {
                 } else {
                     readableSize = getString(R.string.unk_size);
                 }
-                downAlert(url, userAgent, contentDisposition, mimetype, readableSize);
+                downAlert(url, userAgent, contentDisposition, mimetype, readableSize, fileName);
             }
-            private void downAlert(final String url, final String userAgent, final String contentDisposition, final String mimetype, String readableSize){
+            private void downAlert(final String url, final String userAgent, final String contentDisposition, final String mimetype, String readableSize, final String fileName){
                 new AlertDialog.Builder(MainActivity.this)
                     .setTitle(R.string.confirm_downl)
                     .setMessage(getString(R.string.downl_msg, fileName, readableSize))
