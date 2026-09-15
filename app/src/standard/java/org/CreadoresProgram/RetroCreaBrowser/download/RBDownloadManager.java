@@ -93,7 +93,7 @@ public class RBDownloadManager {
                 try {
                     File path = getDownloadsDirectoryCompat();
                     if (!path.exists()) path.mkdirs();
-                    File file = new File(path, fileName);
+                    File file = getUniqueFile(path, fileName);
 
                     InputStream input = body.byteStream();
                     FileOutputStream output = new FileOutputStream(file);
@@ -169,6 +169,30 @@ public class RBDownloadManager {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    private static File getUniqueFile(File directory, String fileName) {
+        File file = new File(directory, fileName);
+        if (!file.exists()) {
+            return file;
+        }
+
+        String nameWithoutExt = fileName;
+        String ext = "";
+        int dotIndex = fileName.lastIndexOf('.');
+
+        if (dotIndex > 0) {
+            nameWithoutExt = fileName.substring(0, dotIndex);
+            ext = fileName.substring(dotIndex);
+        }
+
+        int count = 1;
+        while (file.exists()) {
+            String newFileName = nameWithoutExt + " (" + count + ")" + ext;
+            file = new File(directory, newFileName);
+            count++;
+        }
+        return file;
     }
 
     @SuppressWarnings("deprecation")
