@@ -44,5 +44,9 @@
             android:launchMode="singleTask" android:label="@string/marks" android:exported="false" android:configChanges="orientation|screenSize|keyboardHidden|screenLayout"></activity>
         <activity android:name=".HistoryActivity"
             android:launchMode="singleTask" android:label="@string/history" android:exported="false" android:configChanges="orientation|screenSize|keyboardHidden|screenLayout"></activity>
+        <activity android:name=".ConfigActivity"
+            android:launchMode="singleTask" android:label="@string/config" android:exported="false" android:configChanges="orientation|screenSize|keyboardHidden|screenLayout"></activity>
+        <activity android:name=".ExtensionsActivity"
+            android:launchMode="singleTask" android:label="@string/exts" android:exported="false" android:configChanges="orientation|screenSize|keyboardHidden|screenLayout"></activity>
     </application>
 </manifest>

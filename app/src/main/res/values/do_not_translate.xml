@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">RetroCreaBrowser</string>
     <string name="url">Url:</string>
+    <string name="home_default">https://lite.duckduckgo.com/lite/</string>
 </resources>

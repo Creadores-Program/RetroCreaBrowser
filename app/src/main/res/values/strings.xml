@@ -31,4 +31,24 @@
     <string name="confirm_downl">Descargar Archivo</string>
     <string name="downl_msg">¿Deseas descargar \"%1$s\" (%2$s)?</string>
     <string name="unk_size">Tamaño desconocido</string>
+    <string name="search_exts">Buscar Extensiones</string>
+    <string name="no_exts">No tienes Extensiones Añadidas</string>
+    <string name="theme">Tema de Pagina</string>
+    <string name="theme_light">Claro</string>
+    <string name="theme_dark">Oscuro</string>
+    <string name="theme_default">Según el sistema</string>
+    <string name="add_search_engine">Añadir Motor de Búsqueda</string>
+    <string name="limit_delete_search_engine">Debes mantener al menos 1 motor de búsqueda.</string>
+    <string name="search_engine_deleted">Motor eliminado correctamente</string>
+    <string name="search_engine_add">Añadir Motor de Búsqueda</string>
+    <string name="search_engine_need_prefix" formatted="false">Nota: La URL debe contener el prefijo/comodín \'%s\' donde irá el texto buscado.</string>
+    <string name="search_engine_name_ej">Nombre (ej. DuckDuckGo Lite)</string>
+    <string name="search_engine_url_ej" formatted="false">URL con %s (ej. https://site.com/?q=%s)</string>
+    <string name="save">Guardar</string>
+    <string name="complet_create_search_engine">Completa todos los campos</string>
+    <string name="error_no_prefix_search_engine" formatted="false">Error: La URL debe contener el comodín \'%s\'</string>
+    <string name="search_engine_added">Motor añadido</string>
+    <string name="home_page">Página Principal: </string>
+    <string name="no_void_home_page">El campo no puede estar vacío</string>
+    <string name="updated_home_page">Página de inicio actualizada</string>
 </resources>

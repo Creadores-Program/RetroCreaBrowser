@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.ComponentCallbacks2;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.net.http.SslError;
 import android.os.Bundle;
@@ -412,6 +413,11 @@ public class MainActivity extends Activity {
         webSettings.setSaveFormData(true);
         webView.setInitialScale(0);
         UserAgentManager.applySelectedUserAgent(this, webView, creaClient);
+        final ConfigManager configM = new ConfigManager(this);
+        int theme = configM.getInt(ConfigActivity.KEY_THEME, ConfigActivity.THEME_SYSTEM);
+        if(theme == ConfigActivity.THEME_DARK || (theme == ConfigActivity.THEME_SYSTEM && Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO && (getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES)){
+            creaClient.setDarkTheme(true);
+        }
         Intent intent = getIntent();
         if (intent != null && Intent.ACTION_VIEW.equals(intent.getAction())) {
             Uri data = intent.getData();
@@ -421,7 +427,7 @@ public class MainActivity extends Activity {
                 return;
             }
         }
-        creaClient.loadUrl(webView, "https://lite.duckduckgo.com/lite/");
+        creaClient.loadUrl(webView, configM.getString(ConfigActivity.KEY_HOME, getString(R.string.home_default)));
     }
 
     private boolean openInExternalAppIfPossible(String url) {
@@ -911,6 +917,14 @@ public class MainActivity extends Activity {
             return true;
         }else if(id == MENU_HISTORY){
             Intent intent = new Intent(this, HistoryActivity.class);
+            startActivity(intent);
+            return true;
+        }else if(id == MENU_EXTS){
+            Intent intent = new Intent(this, ExtensionsActivity.class);
+            startActivity(intent);
+            return true;
+        }else if(id == MENU_CONFIG){
+            Intent intent = new Intent(this, ConfigActivity.class);
             startActivity(intent);
             return true;
         }else if(id == MENU_EXIT){
