@@ -20,6 +20,8 @@ import android.widget.TextView;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import java.util.List;
+
 public class ConfigActivity extends Activity {
     public static final int THEME_SYSTEM = 0;
     public static final int THEME_LIGHT = 1;
