@@ -2,22 +2,19 @@ package org.CreadoresProgram.RetroCreaBrowser;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
@@ -28,10 +25,11 @@ public class ConfigActivity extends Activity {
     public static final int THEME_DARK = 2;
     public static final String KEY_THEME = "theme";
     public static final String KEY_HOME = "homepage";
+    private static final String REPO_FDR = "https://creadores-program.github.io/CreaProFDR/repo";
+    private static final String REPO_GH = "https://github.com/Creadores-Program/RetroCreaBrowser";
 
     private List<SearchEngineManager.Engine> enginesList;
-    private EngineAdapter adapter;
-    private ListView listView;
+    private LinearLayout containerEngines;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -43,12 +41,13 @@ public class ConfigActivity extends Activity {
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD){
             getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.top_bar);
             TextView actionBarTitle = (TextView) findViewById(R.id.top_bar_title);
-            actionBarTitle.setText(R.string.config);
+            if (actionBarTitle != null) {
+                actionBarTitle.setText(R.string.config);
+            }
         }
         final ConfigManager configM = new ConfigManager(this);
-        //f-droid repo, github link
 
-        //dark mode:
+        // dark mode
         int selectedTheme = configM.getInt(KEY_THEME, THEME_SYSTEM);
         RadioGroup rgTheme = (RadioGroup) findViewById(R.id.rgTheme);
         if (selectedTheme == THEME_LIGHT) {
@@ -74,29 +73,14 @@ public class ConfigActivity extends Activity {
                 }
             }
         });
-        //search engines
-        listView = (ListView) findViewById(R.id.listViewEngines);
+
+        // search engines
+        containerEngines = (LinearLayout) findViewById(R.id.containerEngines);
         Button btnAdd = (Button) findViewById(R.id.btnAddEngine);
         enginesList = SearchEngineManager.getEngines(this);
-        adapter = new EngineAdapter(this, enginesList);
-        listView.setAdapter(adapter);
-        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
-                if (enginesList.size() <= 1) {
-                    Toast.makeText(ConfigActivity.this, 
-                        R.string.limit_delete_search_engine, 
-                        Toast.LENGTH_SHORT).show();
-                    return true;
-                }
 
-                enginesList.remove(position);
-                SearchEngineManager.saveEngines(ConfigActivity.this, enginesList);
-                adapter.notifyDataSetChanged();
-                Toast.makeText(ConfigActivity.this, R.string.search_engine_deleted, Toast.LENGTH_SHORT).show();
-                return true;
-            }
-        });
+        renderEngines();
+
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -104,8 +88,8 @@ public class ConfigActivity extends Activity {
             }
         });
 
-        //home page
-        EditText etHomeUrl = (EditText) findViewById(R.id.etHomeUrl);
+        // home page
+        final EditText etHomeUrl = (EditText) findViewById(R.id.etHomeUrl);
         etHomeUrl.setText(configM.getString(KEY_HOME, getString(R.string.home_default)));
         Button btnSave = (Button) findViewById(R.id.btnSaveHome);
         btnSave.setOnClickListener(new View.OnClickListener() {
@@ -119,10 +103,82 @@ public class ConfigActivity extends Activity {
                 }
 
                 configM.setString(KEY_HOME, newUrl);
-
                 Toast.makeText(ConfigActivity.this, R.string.updated_home_page, Toast.LENGTH_SHORT).show();
             }
         });
+
+        // f-droid repo
+        Button btnFDR = (Button) findViewById(R.id.btnFDR);
+        btnFDR.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ConfigActivity.this, MainActivity.class);
+                intent.setData(Uri.parse(REPO_FDR));
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+        // github
+        Button btnGh = (Button) findViewById(R.id.btnGh);
+        btnGh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ConfigActivity.this, MainActivity.class);
+                intent.setData(Uri.parse(REPO_GH));
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(intent);
+                finish();
+            }
+        });
+    }
+
+    private void renderEngines() {
+        if (containerEngines == null) return;
+        containerEngines.removeAllViews();
+
+        int p = dpToPx(10);
+        for (int i = 0; i < enginesList.size(); i++) {
+            final int position = i;
+            final SearchEngineManager.Engine engine = enginesList.get(i);
+
+            LinearLayout itemLayout = new LinearLayout(this);
+            itemLayout.setOrientation(LinearLayout.VERTICAL);
+            itemLayout.setPadding(p, p, p, p);
+            itemLayout.setClickable(true);
+
+            TextView tvName = new TextView(this);
+            tvName.setTextSize(16);
+            tvName.setText(engine.name);
+
+            TextView tvUrl = new TextView(this);
+            tvUrl.setTextSize(12);
+            tvUrl.setText(engine.searchUrl);
+
+            itemLayout.addView(tvName);
+            itemLayout.addView(tvUrl);
+
+            itemLayout.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    if (enginesList.size() <= 1) {
+                        Toast.makeText(ConfigActivity.this, 
+                            R.string.limit_delete_search_engine, 
+                            Toast.LENGTH_SHORT).show();
+                        return true;
+                    }
+
+                    enginesList.remove(position);
+                    SearchEngineManager.saveEngines(ConfigActivity.this, enginesList);
+                    renderEngines();
+                    Toast.makeText(ConfigActivity.this, R.string.search_engine_deleted, Toast.LENGTH_SHORT).show();
+                    return true;
+                }
+            });
+
+            containerEngines.addView(itemLayout);
+        }
     }
 
     private void showAddEngineDialog() {
@@ -168,7 +224,7 @@ public class ConfigActivity extends Activity {
 
                 enginesList.add(new SearchEngineManager.Engine(name, url));
                 SearchEngineManager.saveEngines(ConfigActivity.this, enginesList);
-                adapter.notifyDataSetChanged();
+                renderEngines();
                 Toast.makeText(ConfigActivity.this, R.string.search_engine_added, Toast.LENGTH_SHORT).show();
             }
         });
@@ -180,55 +236,5 @@ public class ConfigActivity extends Activity {
     private int dpToPx(int dp) {
         float density = getResources().getDisplayMetrics().density;
         return Math.round((float) dp * density);
-    }
-
-    private class EngineAdapter extends BaseAdapter {
-        private Context context;
-        private List<SearchEngineManager.Engine> list;
-
-        public EngineAdapter(Context context, List<SearchEngineManager.Engine> list) {
-            this.context = context;
-            this.list = list;
-        }
-
-        @Override
-        public int getCount() { return list.size(); }
-
-        @Override
-        public Object getItem(int position) { return list.get(position); }
-
-        @Override
-        public long getItemId(int position) { return position; }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            if (convertView == null) {
-                LinearLayout itemLayout = new LinearLayout(context);
-                itemLayout.setOrientation(LinearLayout.VERTICAL);
-                int p = dpToPx(10);
-                itemLayout.setPadding(p, p, p, p);
-
-                TextView tvName = new TextView(context);
-                tvName.setId(1);
-                tvName.setTextSize(16);
-
-                TextView tvUrl = new TextView(context);
-                tvUrl.setId(2);
-                tvUrl.setTextSize(12);
-
-                itemLayout.addView(tvName);
-                itemLayout.addView(tvUrl);
-                convertView = itemLayout;
-            }
-
-            SearchEngineManager.Engine engine = list.get(position);
-            TextView tvName = (TextView) convertView.findViewById(1);
-            TextView tvUrl = (TextView) convertView.findViewById(2);
-
-            tvName.setText(engine.name);
-            tvUrl.setText(engine.searchUrl);
-
-            return convertView;
-        }
     }
 }
