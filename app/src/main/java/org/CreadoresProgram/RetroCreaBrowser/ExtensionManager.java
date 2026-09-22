@@ -85,11 +85,4 @@ public class ExtensionManager {
             saveExtensions(context, list);
         }
     }
-    public static void removeExtension(Context context, int index) {
-        List<Extension> list = getExtensions(context);
-        if (index >= 0 && index < list.size()) {
-            list.remove(index);
-            saveExtensions(context, list);
-        }
-    }
 }
