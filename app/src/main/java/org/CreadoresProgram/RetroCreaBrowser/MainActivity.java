@@ -920,12 +920,8 @@ public class MainActivity extends Activity {
             startActivity(intent);
             return true;
         }else if(id == MENU_EXTS){
-            try{
             Intent intent = new Intent(this, ExtensionsActivity.class);
             startActivity(intent);
-            } catch (Exception e){
-                android.widget.Toast.makeText(this, e.getMessage(), android.widget.Toast.LENGTH_SHORT).show();
-            }
             return true;
         }else if(id == MENU_CONFIG){
             Intent intent = new Intent(this, ConfigActivity.class);
