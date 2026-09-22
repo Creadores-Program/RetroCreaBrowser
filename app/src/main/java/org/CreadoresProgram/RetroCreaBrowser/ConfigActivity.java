@@ -114,6 +114,7 @@ public class ConfigActivity extends Activity {
             public void onClick(View v) {
                 Intent intent = new Intent(ConfigActivity.this, MainActivity.class);
                 intent.setData(Uri.parse(REPO_FDR));
+                intent.setAction(Intent.ACTION_VIEW);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(intent);
                 finish();
@@ -127,6 +128,7 @@ public class ConfigActivity extends Activity {
             public void onClick(View v) {
                 Intent intent = new Intent(ConfigActivity.this, MainActivity.class);
                 intent.setData(Uri.parse(REPO_GH));
+                intent.setAction(Intent.ACTION_VIEW);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(intent);
                 finish();
