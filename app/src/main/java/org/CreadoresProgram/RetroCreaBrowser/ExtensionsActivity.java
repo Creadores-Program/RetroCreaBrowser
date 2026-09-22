@@ -32,8 +32,7 @@ public class ExtensionsActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD) {
+        if(Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD){
             requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
         }
         
@@ -42,7 +41,9 @@ public class ExtensionsActivity extends Activity {
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD) {
             getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.top_bar);
             TextView actionBarTitle = (TextView) findViewById(R.id.top_bar_title);
-            actionBarTitle.setText(R.string.exts);
+            if (actionBarTitle != null) {
+                actionBarTitle.setText(R.string.exts);
+            }
         }
 
         this.listView = (ListView) findViewById(R.id.listViewExts);
