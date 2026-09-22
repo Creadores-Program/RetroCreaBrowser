@@ -74,7 +74,7 @@
             android:id="@+id/btnSaveHome"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/save" />
+            android:text="@string/save_home" />
 
         <Button
             android:id="@+id/btnFDR"
