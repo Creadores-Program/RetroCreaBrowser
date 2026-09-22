@@ -55,4 +55,5 @@
     <string name="github">Ver codigo en Github</string>
     <string name="license_info">Esta app esta bajo la Licencia MIT</string>
     <string name="credits_info">Hecho por Creadores Program para dispositivos Android</string>
+    <string name="save_home">Guardar Página</string>
 </resources>
