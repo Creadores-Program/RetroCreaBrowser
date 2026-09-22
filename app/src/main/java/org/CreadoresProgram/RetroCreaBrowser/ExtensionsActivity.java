@@ -36,7 +36,7 @@ public class ExtensionsActivity extends Activity {
             requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
         }
         
-        setContentView(R.layout.layout_config);
+        setContentView(R.layout.layout_exts);
         
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD) {
             getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.top_bar);
