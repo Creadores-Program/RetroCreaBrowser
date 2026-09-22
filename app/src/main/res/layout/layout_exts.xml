@@ -3,21 +3,30 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical">
+
     <Button
         android:id="@+id/btnSearchExts"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:text="@string/search_exts" />
-    <ListView
-        android:id="@+id/listViewExts"
+
+    <FrameLayout
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" />
-    <TextView
-        android:id="@+id/emptyViewExts"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:gravity="center"
-        android:text="@string/no_exts"
-        android:visibility="gone" />
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <ListView
+            android:id="@+id/listViewExts"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" />
+
+        <TextView
+            android:id="@+id/emptyViewExts"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:gravity="center"
+            android:text="@string/no_exts"
+            android:visibility="gone" />
+    </FrameLayout>
 </LinearLayout>
