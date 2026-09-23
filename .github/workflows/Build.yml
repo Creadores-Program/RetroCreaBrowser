@@ -9,6 +9,12 @@ on:
       - 'README.md'
   release:
     types: [published]
+  workflow_dispatch:
+    inputs:
+      simulate_release:
+        description: '¿Simulate a release event?'
+        type: boolean
+        default: false
 
 jobs:
   build:
@@ -36,7 +42,7 @@ jobs:
         env:
           RETROCREABROWSERKEYCONTREAPP: ${{ secrets.RETROCREABROWSERKEYCONTREAPP }}
         run: |
-          if [ "${{ github.event_name }}" = "release" ]; then
+          if [ "${{ github.event_name }}" = "release" ] || [ "${{ inputs.simulate_release }}" = "true" ]; then
             ./gradlew :app:assembleRelease --no-daemon
           else
             ./gradlew :app:assembleDebug --no-daemon
@@ -62,8 +68,8 @@ jobs:
       - name: Upload APK artifact
         uses: actions/upload-artifact@v7
         with:
-          name: ${{ github.event_name == 'release' && 'RetroCreaBrowserApp-Release' || 'RetroCreaBrowserApp-Debug' }}
-          path: ${{ github.event_name == 'release' && 'app/build/outputs/apk/*/release/*.apk' || 'app/build/outputs/apk/*/debug/*.apk' }}
+          name: ${{ (github.event_name == 'release' || inputs.simulate_release) && 'RetroCreaBrowserApp-Release' || 'RetroCreaBrowserApp-Debug' }}
+          path: ${{ (github.event_name == 'release' || inputs.simulate_release) && 'app/build/outputs/apk/*/release/*.apk' || 'app/build/outputs/apk/*/debug/*.apk' }}
       - name: Attach APK to GitHub Release
         if: github.event_name == 'release'
         uses: softprops/action-gh-release@v3
