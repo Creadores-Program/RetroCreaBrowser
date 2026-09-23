@@ -59,6 +59,9 @@
     <string name="deleted_ext">Extensión Eliminada</string>
     <string name="loadExt">Cargando Extensión %1$s...</string>
     <string name="loadedExt">Extensión %1$s Cargada</string>
-    <string>Quieres añadir la extensión %1$s?</string>
-    <string>Quieres volver a añadir la extensión %1$s?</string>
+    <string name="add_ext">Quieres añadir la extensión %1$s?</string>
+    <string name="replace_ext">Quieres volver a añadir la extensión %1$s?</string>
+    <string name="ext_saved">Extensión guardada y activadas</string>
+    <string name="error_ext">Extensión Error</string>
+    <string name="error_desc_ext">Ocurrio un error al Añadir la Extensión: %1$s</string>
 </resources>

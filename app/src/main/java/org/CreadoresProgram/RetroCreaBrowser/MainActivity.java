@@ -54,6 +54,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ScrollView;
+import android.widget.Toast;
 import android.content.res.ColorStateList;
 
 import org.CreadoresProgram.WebViewCREA.WebViewCreaClient;
@@ -162,50 +163,11 @@ public class MainActivity extends Activity {
                         return true;
                     }else if(url.startsWith(SCHEME_SEARCH_PREFIX)){
                         String query = url.substring(SCHEME_SEARCH_PREFIX.length());
-                        if(TextUtils.isEmpty(query)){
-                            return true;
-                        }
-                        int selectedPos = SearchEngineManager.getSelectedEngineIndex(MainActivity.this);
-                        List<SearchEngineManager.Engine> engines = SearchEngineManager.getEngines(MainActivity.this);
-                        SearchEngineManager.Engine selectedEngine = engines.get(selectedPos);
-                        try {
-                            String searchUrl = String.format(selectedEngine.searchUrl, query);
-                            creaClient.loadUrl(webView, searchUrl);
-                        } catch (Exception e) {
-                            creaClient.loadUrl(webView, selectedEngine.searchUrl.replace("%s", query));
-                        }
+                        search(query);
                         return true;
                     }else if(url.startsWith(SCHEME_EXT_PREFIX)){
                         String extension = url.substring(SCHEME_EXT_PREFIX.length());
-                        if(TextUtils.isEmpty(extension)){
-                            return true;
-                        }
-                        try{
-                            org.json.JSONObject info = new org.json.JSONObject(URLDecoder.decode(extension, "UTF-8"));
-                            boolean exists = false;
-                            String name = info.getString("name");
-                            String scriptCode = info.getString("scriptCode");
-                            for(ExtensionManager.Extension ext : extensions){
-                                if(ext.name.equals(name) || ext.scriptCode.equals(scriptCode)){
-                                    exists = true;
-                                    break;
-                                }
-                            }
-                            String msg = exists ? MainActivity.this.getString(R.string.replace_ext, name) : MainActivity.this.getString(R.string.add_ext, name);
-                            new AlertDialog.Builder()
-                              .setTitle(R.string.exts)
-                              .setIcon(android.R.drawable.ic_menu_manage)
-                              .setMessage(msg)
-                              .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener(){
-                                @Override
-                                public void onClick(DialogInterface dialog, int wich){
-                                    //add
-                                }
-                              })
-                              .setNegativeButton(android.R.string.cancel, null)
-                              .setCancelable(false)
-                              .create().show();
-                        }catch(Exception e){}
+                        installExt(extension);
                         return true;
                     }
                 }
@@ -213,6 +175,63 @@ public class MainActivity extends Activity {
                     return true;
                 }
                 return super.shouldOverrideUrlLoading(view, url);
+            }
+
+            private void installExt(String extension){
+                if(TextUtils.isEmpty(extension)){
+                    return;
+                }
+                try{
+                    org.json.JSONObject info = new org.json.JSONObject(URLDecoder.decode(extension, "UTF-8"));
+                    boolean exists = false;
+                    final String name = info.getString("name");
+                    final String scriptCode = info.getString("scriptCode");
+                    for(ExtensionManager.Extension ext : extensions){
+                        if(ext.name.equals(name) || ext.scriptCode.equals(scriptCode)){
+                            exists = true;
+                            break;
+                        }
+                    }
+                    String msg = exists ? getString(R.string.replace_ext, name) : getString(R.string.add_ext, name);
+                    new AlertDialog.Builder(MainActivity.this)
+                        .setTitle(R.string.exts)
+                        .setIcon(android.R.drawable.ic_menu_manage)
+                        .setMessage(msg)
+                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener(){
+                            @Override
+                            public void onClick(DialogInterface dialog, int wich){
+                                ExtensionManager.addExtension(MainActivity.this, name, scriptCode);
+                                Toast.makeText(MainActivity.this, R.string.ext_saved, Toast.LENGTH_SHORT).show();
+                            }
+                        })
+                        .setNegativeButton(android.R.string.cancel, null)
+                        .setCancelable(false)
+                        .create().show();
+                }catch(Exception e){
+                    e.printStackTrace();
+                    new AlertDialog.Builder(MainActivity.this)
+                        .setTitle(R.string.error_ext)
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setMessage(getString(R.string.error_desc_ext, e.getMessage()))
+                        .setPositiveButton(android.R.string.ok, null)
+                        .setCancelable(false)
+                        .create().show();
+                }
+            }
+
+            private void search(String query){
+                if(TextUtils.isEmpty(query)){
+                    return;
+                }
+                int selectedPos = SearchEngineManager.getSelectedEngineIndex(MainActivity.this);
+                List<SearchEngineManager.Engine> engines = SearchEngineManager.getEngines(MainActivity.this);
+                SearchEngineManager.Engine selectedEngine = engines.get(selectedPos);
+                try {
+                    String searchUrl = String.format(selectedEngine.searchUrl, query);
+                    creaClient.loadUrl(webView, searchUrl);
+                } catch (Exception e) {
+                    creaClient.loadUrl(webView, selectedEngine.searchUrl.replace("%s", query));
+                }
             }
 
             @Override
@@ -236,18 +255,11 @@ public class MainActivity extends Activity {
                         return true;
                     }else if(url.startsWith(SCHEME_SEARCH_PREFIX)){
                         String query = url.substring(SCHEME_SEARCH_PREFIX.length());
-                        if(TextUtils.isEmpty(query)){
-                            return true;
-                        }
-                        int selectedPos = SearchEngineManager.getSelectedEngineIndex(MainActivity.this);
-                        List<SearchEngineManager.Engine> engines = SearchEngineManager.getEngines(MainActivity.this);
-                        SearchEngineManager.Engine selectedEngine = engines.get(selectedPos);
-                        try {
-                            String searchUrl = String.format(selectedEngine.searchUrl, query);
-                            creaClient.loadUrl(webView, searchUrl);
-                        } catch (Exception e) {
-                            creaClient.loadUrl(webView, selectedEngine.searchUrl.replace("%s", query));
-                        }
+                        search(query);
+                        return true;
+                    }else if(url.startsWith(SCHEME_EXT_PREFIX)){
+                        String extension = url.substring(SCHEME_EXT_PREFIX.length());
+                        installExt(extension);
                         return true;
                     }
                 }
@@ -277,12 +289,12 @@ public class MainActivity extends Activity {
                 HistoryManager.addHistory(MainActivity.this, view.getTitle(), url);
                 WebViewUtils.evaluateJS(webView, colorExt);
                 progressBar.setVisibility(View.GONE);
-                consoleJS.appendLog(MainActivity.this.getString(R.string.warnconsolejs));
+                consoleJS.appendLog(getString(R.string.warnconsolejs));
                 for(ExtensionManager.Extension ext : extensions){
                     if(ext.enabled){
-                        consoleJS.appendLog(MainActivity.this.getString(R.string.loadExt, ext.name));
-                        WebViewUtils.evaluateJS(webview, ext.scriptCode);
-                        consoleJS.appendLog(MainActivity.this.getString(R.string.loadedExt, ext.name));
+                        consoleJS.appendLog(getString(R.string.loadExt, ext.name));
+                        WebViewUtils.evaluateJS(webView, ext.scriptCode);
+                        consoleJS.appendLog(getString(R.string.loadedExt, ext.name));
                     }
                 }
             }
@@ -380,7 +392,7 @@ public class MainActivity extends Activity {
                         userAgent = webView.getSettings().getUserAgentString();
                     }
                 }
-                if(MainActivity.this.isFinishing()){
+                if(isFinishing()){
                     return;
                 }
 
