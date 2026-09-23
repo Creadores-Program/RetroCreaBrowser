@@ -85,6 +85,8 @@ public class MainActivity extends Activity {
     private static final String SCHEME_MARKS_PREFIX = "marks://";
     private static final String SCHEME_HISTORY_PREFIX = "history://";
     private static final String SCHEME_SEARCH_PREFIX = "search://";
+    private static final String SCHEME_EXT_PREFIX = "ext://";
+    private static final String SCHEME_EXTS_PREFIX = "exts://";
     private static final int MENU_CONFIG = 1001;
     private static final int MENU_MARKS = 1002;
     private static final int MENU_HISTORY = 1003;
@@ -92,6 +94,7 @@ public class MainActivity extends Activity {
     private static final int MENU_EXIT = 1005;
     private String colorExt;
     private String viewcodeExt;
+    private List<ExtensionManager.Extension> extensions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -104,6 +107,7 @@ public class MainActivity extends Activity {
         this.progressBar = (ProgressBar) findViewById(R.id.progressBar);
         this.colorExt = AssetUtils.readAssetAsString(getAssets(), "colorExt.js");
         this.viewcodeExt = AssetUtils.readAssetAsString(getAssets(), "viewcodeExt.js");
+        loadExts();
         
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD){
             getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.top_bar);
@@ -152,6 +156,10 @@ public class MainActivity extends Activity {
                         Intent intent = new Intent(MainActivity.this, HistoryActivity.class);
                         startActivity(intent);
                         return true;
+                    }else if(url.startsWith(SCHEME_EXTS_PREFIX)){
+                        Intent intent = new Intent(MainActivity.this, ExtensionsActivity.class);
+                        startActivity(intent);
+                        return true;
                     }else if(url.startsWith(SCHEME_SEARCH_PREFIX)){
                         String query = url.substring(SCHEME_SEARCH_PREFIX.length());
                         if(TextUtils.isEmpty(query)){
@@ -166,6 +174,38 @@ public class MainActivity extends Activity {
                         } catch (Exception e) {
                             creaClient.loadUrl(webView, selectedEngine.searchUrl.replace("%s", query));
                         }
+                        return true;
+                    }else if(url.startsWith(SCHEME_EXT_PREFIX)){
+                        String extension = url.substring(SCHEME_EXT_PREFIX.length());
+                        if(TextUtils.isEmpty(extension)){
+                            return true;
+                        }
+                        try{
+                            org.json.JSONObject info = new org.json.JSONObject(URLDecoder.decode(extension, "UTF-8"));
+                            boolean exists = false;
+                            String name = info.getString("name");
+                            String scriptCode = info.getString("scriptCode");
+                            for(ExtensionManager.Extension ext : extensions){
+                                if(ext.name.equals(name) || ext.scriptCode.equals(scriptCode)){
+                                    exists = true;
+                                    break;
+                                }
+                            }
+                            String msg = exists ? MainActivity.this.getString(R.string.replace_ext, name) : MainActivity.this.getString(R.string.add_ext, name);
+                            new AlertDialog.Builder()
+                              .setTitle(R.string.exts)
+                              .setIcon(android.R.drawable.ic_menu_manage)
+                              .setMessage(msg)
+                              .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener(){
+                                @Override
+                                public void onClick(DialogInterface dialog, int wich){
+                                    //add
+                                }
+                              })
+                              .setNegativeButton(android.R.string.cancel, null)
+                              .setCancelable(false)
+                              .create().show();
+                        }catch(Exception e){}
                         return true;
                     }
                 }
@@ -188,6 +228,10 @@ public class MainActivity extends Activity {
                         return true;
                     }else if(url.startsWith(SCHEME_HISTORY_PREFIX)){
                         Intent intent = new Intent(MainActivity.this, HistoryActivity.class);
+                        startActivity(intent);
+                        return true;
+                    }else if(url.startsWith(SCHEME_EXTS_PREFIX)){
+                        Intent intent = new Intent(MainActivity.this, ExtensionsActivity.class);
                         startActivity(intent);
                         return true;
                     }else if(url.startsWith(SCHEME_SEARCH_PREFIX)){
@@ -234,6 +278,13 @@ public class MainActivity extends Activity {
                 WebViewUtils.evaluateJS(webView, colorExt);
                 progressBar.setVisibility(View.GONE);
                 consoleJS.appendLog(MainActivity.this.getString(R.string.warnconsolejs));
+                for(ExtensionManager.Extension ext : extensions){
+                    if(ext.enabled){
+                        consoleJS.appendLog(MainActivity.this.getString(R.string.loadExt, ext.name));
+                        WebViewUtils.evaluateJS(webview, ext.scriptCode);
+                        consoleJS.appendLog(MainActivity.this.getString(R.string.loadedExt, ext.name));
+                    }
+                }
             }
             @Override
             public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
@@ -510,6 +561,10 @@ public class MainActivity extends Activity {
                 creaClient.loadUrl(webView, data.toString());
             }
         }
+    }
+
+    private void loadExts(){
+        this.extensions = ExtensionManager.getExtensions(this);
     }
 
     private void showSearchDialog() {

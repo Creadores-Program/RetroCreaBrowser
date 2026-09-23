@@ -1,0 +1,1 @@
+window.open = function(){ return null; };

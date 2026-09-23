@@ -57,4 +57,8 @@
     <string name="credits_info">Hecho por Creadores Program para dispositivos Android</string>
     <string name="save_home">Guardar Página</string>
     <string name="deleted_ext">Extensión Eliminada</string>
+    <string name="loadExt">Cargando Extensión %1$s...</string>
+    <string name="loadedExt">Extensión %1$s Cargada</string>
+    <string>Quieres añadir la extensión %1$s?</string>
+    <string>Quieres volver a añadir la extensión %1$s?</string>
 </resources>

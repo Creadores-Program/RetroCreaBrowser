@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.text.TextUtils;
+import org.CreadoresProgram.RetroCreaBrowser.utils.AssetUtils;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,8 +30,8 @@ public class ExtensionManager {
         List<Extension> list = new ArrayList<Extension>();
 
         if (rawData == null || TextUtils.isEmpty(rawData)) {
-            list.add(new Extension("Force Dark", "document.body.style.backgroundColor='#121212'; document.body.style.color='#FFFFFF';", false));
-            list.add(new Extension("Block Popups", "window.open = function(){ return null; };", false));
+            list.add(new Extension("Force Dark", AssetUtils.readAssetAsString(context.getAssets(), "forceDarkExt.js"), false));
+            list.add(new Extension("Block Popups", AssetUtils.readAssetAsString(context.getAssets(), "blockPopups.js"), false));
             saveExtensions(context, list);
         } else {
             String[] items = rawData.split("###");
