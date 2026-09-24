@@ -490,7 +490,13 @@ public class MainActivity extends Activity {
                 return;
             }
         }
-        creaClient.loadUrl(webView, configM.getString(ConfigActivity.KEY_HOME, getString(R.string.home_default)));
+        String defHome = getString(R.string.home_default);
+        String homeAc = configM.getString(ConfigActivity.KEY_HOME, defHome);
+        if(homeAc.equals(defHome)){
+            webView.loadUrl(homeAc);
+            return;
+        }
+        creaClient.loadUrl(webView, homeAc);
     }
 
     private boolean openInExternalAppIfPossible(String url) {
