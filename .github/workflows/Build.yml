@@ -4,11 +4,11 @@ on:
   push:
     paths-ignore:
       - 'README.md'
-      - 'backend'
+      - 'backend/**'
   pull_request:
     paths-ignore:
       - 'README.md'
-      - 'backend'
+      - 'backend/**'
   release:
     types: [published]
   workflow_dispatch:

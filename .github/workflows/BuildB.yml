@@ -2,10 +2,10 @@ name: Build Backend
 on:
   push:
     paths:
-      - 'backend'
+      - 'backend/**'
   pull_request:
     paths:
-      - 'backend'
+      - 'backend/**'
   workflow_dispatch:
 
 jobs:
