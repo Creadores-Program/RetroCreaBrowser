@@ -1,0 +1,24 @@
+name: Build Backend
+on:
+  push:
+    paths:
+      - 'backend'
+  pull_request:
+    paths:
+      - 'backend'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          submodules: true
+      - name: Github Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./backend
+          keep_files: false

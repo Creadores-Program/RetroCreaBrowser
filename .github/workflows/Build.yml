@@ -4,9 +4,11 @@ on:
   push:
     paths-ignore:
       - 'README.md'
+      - 'backend'
   pull_request:
     paths-ignore:
       - 'README.md'
+      - 'backend'
   release:
     types: [published]
   workflow_dispatch:
@@ -23,7 +25,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
         with:
-          submodules: true  
+          submodules: true
 
       - name: Set up JDK 17
         uses: actions/setup-java@v6

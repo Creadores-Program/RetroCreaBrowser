@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#1e1e24">
+    <title>Inicio</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #1e1e24;
+            color: #ffffff;
+            font-family: Helvetica, Arial, sans-serif;
+            font-size: 14px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 480px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            margin: 25px 0 15px 0;
+            color: #ffffff;
+            text-shadow: 0px 2px 3px #000000;
+        }
+
+        .search-box {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 4px 8px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            text-align: left;
+        }
+
+        .search-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .search-table td {
+            vertical-align: middle;
+        }
+
+        .search-icon-td {
+            width: 32px;
+            text-align: center;
+        }
+
+        .search-icon {
+            width: 20px;
+            height: 20px;
+            vertical-align: middle;
+        }
+
+        .search-input {
+            width: 100%;
+            border: none;
+            outline: none;
+            background: transparent;
+            font-size: 15px;
+            padding: 8px 5px;
+            color: #333333;
+        }
+
+        .btn-search {
+            background-color: #4A90E2;
+            border: none;
+            color: #ffffff;
+            padding: 7px 14px;
+            border-radius: 15px;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .shortcuts-table {
+            width: 100%;
+            margin-bottom: 20px;
+            border-collapse: separate;
+            border-spacing: 10px;
+        }
+
+        .shortcut-btn {
+            background-color: #2b2b36;
+            border: 1px solid #3a3a4a;
+            border-radius: 8px;
+            padding: 12px 5px;
+            text-align: center;
+            color: #ffffff;
+            text-decoration: none;
+            display: block;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .shortcut-btn:active {
+            background-color: #3a3a4a;
+        }
+
+        .settings-card {
+            background-color: #2b2b36;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 10px;
+            text-align: left;
+            border: 1px solid #3a3a4a;
+        }
+
+        .settings-title {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #3a3a4a;
+            padding-bottom: 5px;
+            color: #4A90E2;
+        }
+
+        .setting-item {
+            margin-bottom: 12px;
+        }
+
+        .setting-item label {
+            display: block;
+            font-size: 12px;
+            margin-bottom: 5px;
+            color: #cccccc;
+        }
+
+        .setting-item select {
+            width: 100%;
+            padding: 8px;
+            background-color: #1e1e24;
+            color: #ffffff;
+            border: 1px solid #3a3a4a;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="logo" id="appLogo">RetroCrea</div>
+
+        <form id="searchForm" action="javascript:void(0);">
+            <div class="search-box">
+                <table class="search-table">
+                    <tr>
+                        <td class="search-icon-td">
+                            <img src="./icon.png" alt="search" class="search-icon" onerror="this.style.display='none';">
+                        </td>
+                        <td>
+                            <input type="text" id="searchInput" class="search-input" placeholder="Buscar en la web..." autocomplete="off">
+                        </td>
+                        <td style="width: 60px; text-align: right;">
+                            <button type="submit" class="btn-search">Ir</button>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </form>
+
+        <table class="shortcuts-table">
+            <tr>
+                <td width="50%">
+                    <a href="marks://open" class="shortcut-btn">Marcadores</a>
+                </td>
+                <td width="50%">
+                    <a href="history://open" class="shortcut-btn">Historial</a>
+                </td>
+            </tr>
+            <tr>
+                <td width="50%">
+                    <a href="exts://" class="shortcut-btn">Extensiones</a>
+                </td>
+                <td width="50%">
+                    <a href="javascript:void(0);" onclick="toggleSettings();" class="shortcut-btn">Opciones</a>
+                </td>
+            </tr>
+        </table>
+
+        <div class="settings-card" id="settingsPanel" style="display: none;">
+            <div class="settings-title">Preferencias</div>
+            
+            <div class="setting-item">
+                <label for="themeSelect">Color de la barra de la App:</label>
+                <select id="themeSelect" onchange="changeTheme(this.value)">
+                    <option value="#1e1e24">Oscuro (Defecto)</option>
+                    <option value="#0055ff">Azul Retro</option>
+                    <option value="#1b5e20">Verde Android</option>
+                    <option value="#b71c1c">Rojo Carmín</option>
+                    <option value="#ffffff">Blanco</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        var form = document.getElementById('searchForm');
+        var input = document.getElementById('searchInput');
+
+        form.onsubmit = function() {
+            var query = input.value;
+            if (query && query.replace(/\s/g, '').length > 0) {
+                window.location.href = "search://" + encodeURIComponent(query);
+            }
+            return false;
+        };
+
+        function toggleSettings() {
+            var panel = document.getElementById('settingsPanel');
+            if (panel.style.display === 'none') {
+                panel.style.display = 'block';
+            } else {
+                panel.style.display = 'none';
+            }
+        }
+
+        function notifyAppColor() {
+            var prefix = "app-color://";
+            try {
+                var color = "";
+                var meta = document.querySelector('meta[name="theme-color"]');
+                
+                if (meta && meta.content) {
+                    color = meta.content;
+                } else if (document.body) {
+                    var style = document.defaultView ? document.defaultView.getComputedStyle(document.body, null) : null;
+                    if (style && style.backgroundColor) {
+                        color = style.backgroundColor;
+                    } else if (document.body.style && document.body.style.backgroundColor) {
+                        color = document.body.style.backgroundColor;
+                    }
+                }
+
+                if (color && color !== "rgba(0, 0, 0, 0)" && color !== "transparent") {
+                    window.location.href = prefix + encodeURIComponent(color);
+                } else {
+                    window.location.href = prefix + "default";
+                }
+            } catch (err) {
+                window.location.href = prefix + "default";
+            }
+        }
+
+        function changeTheme(hexColor) {
+            document.body.style.backgroundColor = hexColor;
+            
+            var meta = document.querySelector('meta[name="theme-color"]');
+            if (meta) {
+                meta.content = hexColor;
+            }
+
+            try {
+                if (window.localStorage) {
+                    localStorage.setItem('user_theme', hexColor);
+                }
+            } catch(e) {}
+
+            notifyAppColor();
+        }
+
+        window.onload = function() {
+            try {
+                if (window.localStorage) {
+                    var savedTheme = localStorage.getItem('user_theme');
+                    if (savedTheme) {
+                        document.getElementById('themeSelect').value = savedTheme;
+                        changeTheme(savedTheme);
+                        return;
+                    }
+                }
+            } catch(e) {}
+
+            notifyAppColor();
+        };
+    </script>
+</body>
+</html>
