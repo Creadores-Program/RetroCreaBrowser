@@ -24,6 +24,7 @@ import android.graphics.drawable.LayerDrawable;
 import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.View;
+import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.Window;
 import android.view.MenuItem;
@@ -105,6 +106,7 @@ public class MainActivity extends Activity {
         }
         setContentView(R.layout.layout_main);
         this.webView = (WebView) findViewById(R.id.webview);
+        registerForContextMenu(webView);
         this.progressBar = (ProgressBar) findViewById(R.id.progressBar);
         this.colorExt = AssetUtils.readAssetAsString(getAssets(), "colorExt.js");
         this.viewcodeExt = AssetUtils.readAssetAsString(getAssets(), "viewcodeExt.js");
@@ -581,6 +583,27 @@ public class MainActivity extends Activity {
         }
     }
 
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo){
+        super.onCreateContextMenu(menu, v, menuInfo);
+        WebView webView = (WebView) v;
+        WebView.HitTestResult result = webView.getHitTestResult();
+
+        int type = result.getType();
+        String extra = result.getExtra();
+        if (type == WebView.HitTestResult.SRC_ANCHOR_TYPE || type == WebView.HitTestResult.IMAGE_ANCHOR_TYPE) {
+            menu.setHeaderTitle(extra);
+            menu.add(0, 1, 0, "Abrir enlace");
+            menu.add(0, 2, 0, "Copiar dirección de enlace");
+        }
+        if (type == WebView.HitTestResult.IMAGE_TYPE || type == WebView.HitTestResult.IMAGE_ANCHOR_TYPE) {
+            menu.setHeaderTitle("Imagen");
+            menu.add(0, 3, 0, "Ver imagen");
+            menu.add(0, 4, 0, "Descargar imagen");
+            menu.add(0, 5, 0, "Buscar imagen");
+        }
+    }
+
     private void loadExts(){
         this.extensions = ExtensionManager.getExtensions(this);
     }
@@ -978,6 +1001,44 @@ public class MainActivity extends Activity {
         return super.onCreateOptionsMenu(menu);
     }
     
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        WebView.HitTestResult result = webView.getHitTestResult();
+        String data = result.getExtra();
+
+        switch (item.getItemId()) {
+            case 1:
+                creaClient.loadUrl(webView, data);
+                return true;
+            case 2:
+                android.content.ClipboardManager clipboard = (android.content.ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+                android.content.ClipData clip = android.content.ClipData.newPlainText(getString(R.string.url), data);
+                clipboard.setPrimaryClip(clip);
+                return true;
+            case 4:
+                String extension = android.webkit.MimeTypeMap.getFileExtensionFromUrl(data);
+                String mimetype = android.webkit.MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
+                if (mimetype == null) {
+                    mimetype = "image/*"; 
+                }
+                String contentDisposition = "attachment; filename=" + URLUtil.guessFileName(data, null, mimetype);
+                RBDownloadManager.processDownload(
+                    this,
+                    creaClient.getNetClient(),
+                    data,
+                    webView.getSettings().getUserAgentString(),
+                    contentDisposition,
+                    mimetype
+                );
+                return true;
+            case 5:
+                //search
+                return true;
+            default:
+                return super.onContextItemSelected(item);
+        }
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
