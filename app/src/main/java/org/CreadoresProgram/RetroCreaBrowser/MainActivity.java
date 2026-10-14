@@ -593,14 +593,14 @@ public class MainActivity extends Activity {
         String extra = result.getExtra();
         if (type == WebView.HitTestResult.SRC_ANCHOR_TYPE || type == WebView.HitTestResult.IMAGE_ANCHOR_TYPE) {
             menu.setHeaderTitle(extra);
-            menu.add(0, 1, 0, "Abrir enlace");
-            menu.add(0, 2, 0, "Copiar dirección de enlace");
+            menu.add(0, 1, 0, R.string.open_link);
+            menu.add(0, 2, 0, R.string.copy_link);
+            menu.add(0, 3, 0, R.string.share_link);
         }
         if (type == WebView.HitTestResult.IMAGE_TYPE || type == WebView.HitTestResult.IMAGE_ANCHOR_TYPE) {
-            menu.setHeaderTitle("Imagen");
-            menu.add(0, 3, 0, "Ver imagen");
-            menu.add(0, 4, 0, "Descargar imagen");
-            menu.add(0, 5, 0, "Buscar imagen");
+            menu.setHeaderTitle(R.string.image);
+            menu.add(0, 4, 0, R.string.view_image);
+            menu.add(0, 5, 0, R.string.download_image);
         }
     }
 
@@ -1000,6 +1000,12 @@ public class MainActivity extends Activity {
         menu.add(Menu.NONE, MENU_EXIT, Menu.NONE, R.string.exit);
         return super.onCreateOptionsMenu(menu);
     }
+
+    private void copyClip11(String data){
+        android.content.ClipboardManager clipboard = (android.content.ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+        android.content.ClipData clip = android.content.ClipData.newPlainText(getString(R.string.url), data);
+        clipboard.setPrimaryClip(clip);
+    }
     
     @Override
     public boolean onContextItemSelected(MenuItem item) {
@@ -1011,11 +1017,28 @@ public class MainActivity extends Activity {
                 creaClient.loadUrl(webView, data);
                 return true;
             case 2:
-                android.content.ClipboardManager clipboard = (android.content.ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-                android.content.ClipData clip = android.content.ClipData.newPlainText(getString(R.string.url), data);
-                clipboard.setPrimaryClip(clip);
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+                    android.text.ClipboardManager clipboard = (android.text.ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+                    if (clipboard != null) {
+                        clipboard.setText(data);
+                    }
+                } else {
+                    copyClip11(data);
+                }
+                return true;
+            case 3:
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("text/plain");
+                intent.putExtra(Intent.EXTRA_TEXT, data);
+                intent.putExtra(Intent.EXTRA_SUBJECT, data);
+                if (intent.resolveActivity(getPackageManager()) != null) {
+                    startActivity(intent);
+                }
                 return true;
             case 4:
+                webView.loadUrl(data);
+                return true;
+            case 5:
                 String extension = android.webkit.MimeTypeMap.getFileExtensionFromUrl(data);
                 String mimetype = android.webkit.MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
                 if (mimetype == null) {
@@ -1030,9 +1053,6 @@ public class MainActivity extends Activity {
                     contentDisposition,
                     mimetype
                 );
-                return true;
-            case 5:
-                //search
                 return true;
             default:
                 return super.onContextItemSelected(item);

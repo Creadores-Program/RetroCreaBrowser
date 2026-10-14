@@ -64,4 +64,10 @@
     <string name="ext_saved">Extensión guardada y activadas</string>
     <string name="error_ext">Extensión Error</string>
     <string name="error_desc_ext">Ocurrio un error al Añadir la Extensión: %1$s</string>
+    <string name="open_link">Abrir enlace</string>
+    <string name="copy_link">Copiar dirección de enlace</string>
+    <string name="share_link">Compartir enlace</string>
+    <string name="image">Imagen</string>
+    <string name="view_image">Ver imagen</string>
+    <string name="download_image">Descargar imagen</string>
 </resources>
