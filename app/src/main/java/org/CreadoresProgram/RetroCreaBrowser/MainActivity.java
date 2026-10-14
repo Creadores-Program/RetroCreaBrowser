@@ -143,6 +143,8 @@ public class MainActivity extends Activity {
             this.originalStatusBarTheme = getWindow().getStatusBarColor();
         }
 
+        final String defHome = getString(R.string.home_default);
+
         this.creaClient = new WebViewCreaClient(){
             @SuppressWarnings("deprecation")
             @Override
@@ -171,6 +173,8 @@ public class MainActivity extends Activity {
                         String extension = url.substring(SCHEME_EXT_PREFIX.length());
                         installExt(extension);
                         return true;
+                    }else if(url.startsWith(defHome)){
+                        return false;
                     }
                 }
                 if (openInExternalAppIfPossible(url)) {
@@ -263,6 +267,8 @@ public class MainActivity extends Activity {
                         String extension = url.substring(SCHEME_EXT_PREFIX.length());
                         installExt(extension);
                         return true;
+                    }else if(url.startsWith(defHome)){
+                        return false;
                     }
                 }
                 if (openInExternalAppIfPossible(url)) {
@@ -492,7 +498,6 @@ public class MainActivity extends Activity {
                 return;
             }
         }
-        String defHome = getString(R.string.home_default);
         String homeAc = configM.getString(ConfigActivity.KEY_HOME, defHome);
         if(homeAc.startsWith(defHome)){
             webView.loadUrl(homeAc);
