@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <script>
+    var userLang = window.navigator.userLanguage || window.navigator.language || "";
+    userLang = userLang.toLowerCase();
+
+    if (userLang.indexOf('en') === 0) {
+      window.location.href = './en/';
+    } else if (userLang.indexOf('fr') === 0) {
+      window.location.href = './fr/';
+    } else if (userLang.indexOf('it') === 0) {
+      window.location.href = './it/';
+    } else if (userLang.indexOf('pt') === 0) {
+      window.location.href = './pt/';
+    } else {
+      window.location.href = './es/';
+    }
+  </script>
+</head>
+<body>
+</body>
+</html>
