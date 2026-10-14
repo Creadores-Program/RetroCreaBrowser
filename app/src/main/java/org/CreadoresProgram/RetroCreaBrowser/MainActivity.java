@@ -494,7 +494,7 @@ public class MainActivity extends Activity {
         }
         String defHome = getString(R.string.home_default);
         String homeAc = configM.getString(ConfigActivity.KEY_HOME, defHome);
-        if(homeAc.equals(defHome)){
+        if(homeAc.startsWith(defHome)){
             webView.loadUrl(homeAc);
             return;
         }
