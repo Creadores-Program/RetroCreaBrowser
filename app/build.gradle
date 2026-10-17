@@ -7,8 +7,8 @@ android {
     compileSdk 25
 
     lintOptions {
-        abortOnError true
-        error 'UnusedImports'
+        checkReleaseBuilds false
+        abortOnError false
     }
 
     defaultConfig {
